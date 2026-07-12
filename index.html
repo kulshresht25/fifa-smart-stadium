@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="StadiumIQ — AI-powered smart stadium and tournament operations platform for FIFA World Cup 2026. Intelligent navigation, crowd management, accessibility, transport, and sustainability tracking." />
+  <meta name="keywords" content="FIFA World Cup 2026, smart stadium, AI assistant, crowd management, navigation, accessibility, transportation, sustainability" />
+  <meta name="author" content="StadiumIQ Team" />
+  <meta property="og:title" content="StadiumIQ — FIFA World Cup 2026 Intelligence Hub" />
+  <meta property="og:description" content="Generative AI-powered stadium operations and fan experience platform" />
+  <meta property="og:type" content="website" />
+
+  <!-- Security headers via meta -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-module'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://generativelanguage.googleapis.com; img-src 'self' data:;" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+
+  <title>StadiumIQ — FIFA World Cup 2026 Intelligence Hub</title>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="./styles/main.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
+</head>
+
+<body>
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div id="app" role="application" aria-label="StadiumIQ FIFA World Cup 2026 Platform">
+
+    <!-- ============================================================
+         SIDEBAR NAVIGATION
+         ============================================================ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+      <!-- Logo -->
+      <div class="sidebar-logo">
+        <div class="logo-icon" aria-hidden="true">⚽</div>
+        <div class="logo-text">
+          <span class="logo-title">StadiumIQ</span>
+          <span class="logo-subtitle">FIFA World Cup 2026</span>
+        </div>
+      </div>
+
+      <!-- Persona Switcher -->
+      <div class="persona-switcher" role="group" aria-label="Select your role">
+        <span class="persona-label">Your Role</span>
+        <div class="persona-grid">
+          <button class="persona-btn active" data-persona="fan" id="persona-fan" aria-pressed="true">⚽ Fan</button>
+          <button class="persona-btn" data-persona="organizer" id="persona-organizer" aria-pressed="false">📋 Organizer</button>
+          <button class="persona-btn" data-persona="volunteer" id="persona-volunteer" aria-pressed="false">🙋 Volunteer</button>
+          <button class="persona-btn" data-persona="staff" id="persona-staff" aria-pressed="false">🔧 Staff</button>
+        </div>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="nav-menu" aria-label="Page navigation">
+        <span class="nav-section-label">Main</span>
+        <button class="nav-item active" data-page="dashboard" id="nav-dashboard" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">📊</span>
+          Dashboard
+        </button>
+        <button class="nav-item" data-page="chat" id="nav-chat">
+          <span class="nav-icon" aria-hidden="true">🤖</span>
+          AI Assistant
+          <span class="nav-badge" aria-label="AI online">AI</span>
+        </button>
+
+        <span class="nav-section-label">Operations</span>
+        <button class="nav-item" data-page="crowd" id="nav-crowd">
+          <span class="nav-icon" aria-hidden="true">👥</span>
+          Crowd Mgmt
+        </button>
+        <button class="nav-item" data-page="navigation" id="nav-navigation">
+          <span class="nav-icon" aria-hidden="true">🗺️</span>
+          Navigation
+        </button>
+        <button class="nav-item" data-page="transport" id="nav-transport">
+          <span class="nav-icon" aria-hidden="true">🚌</span>
+          Transport
+        </button>
+
+        <span class="nav-section-label">Support</span>
+        <button class="nav-item" data-page="accessibility" id="nav-accessibility">
+          <span class="nav-icon" aria-hidden="true">♿</span>
+          Accessibility
+        </button>
+        <button class="nav-item" data-page="sustainability" id="nav-sustainability">
+          <span class="nav-icon" aria-hidden="true">🌍</span>
+          Eco Tracker
+        </button>
+      </nav>
+
+      <!-- Language & Settings -->
+      <div class="sidebar-footer">
+        <select class="lang-selector" id="lang-selector" aria-label="Select language">
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="ar">🇸🇦 العربية</option>
+          <option value="pt">🇧🇷 Português</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="zh">🇨🇳 中文</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="hi">🇮🇳 हिंदी</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+        <button class="settings-btn" id="settings-btn" aria-label="Open settings">
+          ⚙️ Settings &amp; API Key
+        </button>
+      </div>
+    </aside>
+
+    <!-- ============================================================
+         MAIN CONTENT AREA
+         ============================================================ -->
+    <main class="main-content" id="main-content" role="main">
+
+      <!-- Top Header -->
+      <header class="top-header" role="banner">
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+        <div class="header-breadcrumb" aria-label="Current location">
+          <span class="breadcrumb-root">StadiumIQ</span>
+          <span class="breadcrumb-sep" aria-hidden="true">›</span>
+          <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
+        </div>
+        <div class="header-live-indicator" role="status" aria-live="polite">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="live-text">LIVE</span>
+        </div>
+        <div class="header-match-info" aria-label="Current match information">
+          <span>⚽</span>
+          <span id="match-info-text">USA vs MEX · Kickoff 20:00</span>
+        </div>
+        <div class="header-time" id="header-time" aria-live="off" aria-label="Current time"></div>
+      </header>
+
+      <!-- Page Sections -->
+      <div class="page-content">
+
+        <!-- ===================== DASHBOARD ===================== -->
+        <section class="page-section active" id="page-dashboard" aria-labelledby="dashboard-heading">
+          <h1 id="dashboard-heading" class="visually-hidden">Dashboard — FIFA World Cup 2026 Operations</h1>
+
+          <!-- KPI Row -->
+          <div class="dashboard-grid" role="list" aria-label="Key performance indicators">
+            <article class="kpi-card" role="listitem" tabindex="0" aria-label="Stadium occupancy: 64,300 fans">
+              <span class="kpi-icon" aria-hidden="true">👥</span>
+              <div class="kpi-value" id="kpi-fans">64,300</div>
+              <div class="kpi-label">Stadium Occupancy</div>
+              <div class="kpi-trend up" aria-label="Trending up 12 percent from yesterday">↑ +12% vs yesterday</div>
+            </article>
+            <article class="kpi-card" role="listitem" tabindex="0" aria-label="Active alerts: 3">
+              <span class="kpi-icon" aria-hidden="true">🚨</span>
+              <div class="kpi-value" id="kpi-alerts" style="color:#ef4444">3</div>
+              <div class="kpi-label">Active Alerts</div>
+              <div class="kpi-trend down" aria-label="1 critical">↑ 1 critical</div>
+            </article>
+            <article class="kpi-card" role="listitem" tabindex="0" aria-label="Next shuttle: 6 minutes">
+              <span class="kpi-icon" aria-hidden="true">🚌</span>
+              <div class="kpi-value" id="kpi-shuttle">6 min</div>
+              <div class="kpi-label">Next Shuttle</div>
+              <div class="kpi-trend neutral">Express Route</div>
+            </article>
+            <article class="kpi-card" role="listitem" tabindex="0" aria-label="CO2 saved today: 142 tonnes">
+              <span class="kpi-icon" aria-hidden="true">🌍</span>
+              <div class="kpi-value" id="kpi-eco" style="color:#10b981">142t</div>
+              <div class="kpi-label">CO₂ Saved Today</div>
+              <div class="kpi-trend up">↑ Renewable energy</div>
+            </article>
+          </div>
+
+          <!-- Secondary Panels -->
+          <div class="dashboard-secondary">
+            <!-- Crowd Overview -->
+            <div class="dashboard-panel">
+              <div class="panel-header">
+                <h2 style="font-size:15px;font-weight:700">👥 Crowd Overview</h2>
+                <span class="live-badge">LIVE</span>
+              </div>
+              <div id="dash-crowd-mini"></div>
+            </div>
+
+            <!-- AI Insight Card -->
+            <div class="dashboard-panel" style="background: linear-gradient(135deg, #0d1b2a, #1a2740); border-color: rgba(139,92,246,0.3);">
+              <div class="panel-header">
+                <h2 style="font-size:15px;font-weight:700">🤖 AI Operational Summary</h2>
+              </div>
+              <div id="dash-ai-insight">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12px;">
+                    🚨 <strong>Gate 5 at 89% capacity</strong> — redirect signage activated
+                  </div>
+                  <div style="padding:12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:8px;font-size:12px;">
+                    ⚠️ <strong>Concession bottleneck</strong> — recommend opening Section D stand
+                  </div>
+                  <div style="padding:12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:12px;">
+                    ✅ <strong>All accessibility services</strong> operational — 0 pending requests
+                  </div>
+                  <div style="padding:12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);border-radius:8px;font-size:12px;">
+                    ℹ️ <strong>Solar output: 8.4 MWh</strong> — 65% of energy from renewable sources
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Match Schedule -->
+          <section class="matches-section" aria-labelledby="matches-heading">
+            <div class="panel-header">
+              <h2 id="matches-heading" style="font-size:15px;font-weight:700">⚽ FIFA World Cup 2026 — Upcoming Matches</h2>
+              <span style="font-size:12px;color:var(--text-muted)">MetLife Stadium & more</span>
+            </div>
+            <div id="matches-container">
+              <!-- Matches rendered by JS -->
+            </div>
+          </section>
+
+          <!-- Venues Overview -->
+          <section aria-labelledby="venues-heading" style="margin-top:24px">
+            <div class="panel-header">
+              <h2 id="venues-heading" style="font-size:15px;font-weight:700">🏟️ Host Venues</h2>
+            </div>
+            <div id="venues-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px"></div>
+          </section>
+        </section>
+
+        <!-- ===================== AI CHAT ===================== -->
+        <section class="page-section" id="page-chat" aria-labelledby="chat-heading">
+          <h1 id="chat-heading" class="visually-hidden">AI Chat Assistant</h1>
+          <div id="chat-container"></div>
+        </section>
+
+        <!-- ===================== CROWD MANAGEMENT ===================== -->
+        <section class="page-section" id="page-crowd" aria-labelledby="crowd-heading">
+          <h1 id="crowd-heading" class="visually-hidden">Crowd Management Dashboard</h1>
+          <div id="crowd-container"></div>
+        </section>
+
+        <!-- ===================== NAVIGATION ===================== -->
+        <section class="page-section" id="page-navigation" aria-labelledby="nav-heading">
+          <h1 id="nav-heading" class="visually-hidden">Stadium Navigation</h1>
+          <div id="navigation-container"></div>
+        </section>
+
+        <!-- ===================== TRANSPORT ===================== -->
+        <section class="page-section" id="page-transport" aria-labelledby="transport-heading">
+          <h1 id="transport-heading" class="visually-hidden">Transportation Hub</h1>
+          <div id="transport-container"></div>
+        </section>
+
+        <!-- ===================== ACCESSIBILITY ===================== -->
+        <section class="page-section" id="page-accessibility" aria-labelledby="access-heading">
+          <h1 id="access-heading" class="visually-hidden">Accessibility Companion</h1>
+          <div id="accessibility-container"></div>
+        </section>
+
+        <!-- ===================== SUSTAINABILITY ===================== -->
+        <section class="page-section" id="page-sustainability" aria-labelledby="eco-heading">
+          <h1 id="eco-heading" class="visually-hidden">Sustainability & Eco Tracker</h1>
+          <div id="sustainability-container"></div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ============================================================
+       SETTINGS MODAL
+       ============================================================ -->
+  <div class="settings-overlay" id="settings-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="settings-modal">
+      <h2 id="settings-title">⚙️ Settings</h2>
+
+      <div class="settings-group">
+        <label class="settings-label" for="api-key-input">🔑 Google Gemini API Key</label>
+        <input
+          type="password"
+          id="api-key-input"
+          class="settings-input"
+          placeholder="AIza..."
+          aria-describedby="api-key-help"
+          autocomplete="off"
+        />
+        <span id="api-key-help" class="settings-input-note">
+          Get a free API key at <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:var(--primary-light)">makersuite.google.com</a>. 
+          Your key is stored locally and never sent to our servers.
+        </span>
+      </div>
+
+      <div class="settings-group">
+        <label class="settings-label" for="settings-lang">🌐 Display Language</label>
+        <select id="settings-lang" class="settings-input" aria-label="Select display language">
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="ar">🇸🇦 العربية</option>
+          <option value="pt">🇧🇷 Português</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="zh">🇨🇳 中文</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="hi">🇮🇳 हिंदी</option>
+          <option value="ko">🇰🇷 한국어</option>
+        </select>
+      </div>
+
+      <div class="settings-group">
+        <label class="settings-label" for="settings-persona">👤 Default Persona</label>
+        <select id="settings-persona" class="settings-input" aria-label="Select default persona">
+          <option value="fan">⚽ Fan</option>
+          <option value="organizer">📋 Organizer</option>
+          <option value="volunteer">🙋 Volunteer</option>
+          <option value="staff">🔧 Staff</option>
+        </select>
+      </div>
+
+      <div class="settings-group">
+        <label class="settings-label" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+          <input type="checkbox" id="settings-speak" style="accent-color:var(--primary);width:16px;height:16px" />
+          🔊 Auto-speak AI responses
+        </label>
+      </div>
+
+      <div class="settings-actions">
+        <button class="btn-secondary" id="settings-cancel">Cancel</button>
+        <button class="btn-primary" id="settings-save">💾 Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" aria-hidden="true"></div>
+
+  <!-- Visually hidden class for screen readers -->
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--primary);
+      color: white;
+      padding: 8px 16px;
+      z-index: 9999;
+      border-radius: 0 0 8px 0;
+      font-family: 'Inter', sans-serif;
+    }
+    .skip-link:focus { top: 0; }
+  </style>
+
+  <!-- ============================================================
+       MAIN APPLICATION SCRIPT
+       ============================================================ -->
+  <script type="module">
+    import GeminiAPI from './utils/gemini.js';
+    import i18n from './utils/i18n.js';
+    import { storage, showToast, formatTime, MATCH_SCHEDULE, VENUES, animateCount, formatNumber, randomInRange } from './utils/helpers.js';
+    import ChatComponent from './components/chat.js';
+    import CrowdComponent from './components/crowd.js';
+    import NavigationComponent from './components/navigation.js';
+    import AccessibilityComponent from './components/accessibility.js';
+    import TransportComponent from './components/transport.js';
+    import SustainabilityComponent from './components/sustainability.js';
+
+    // ============ App State ============
+    let currentPage = 'dashboard';
+    let currentPersona = 'fan';
+    let initializedComponents = {};
+
+    // ============ Initialize ============
+    function init() {
+      // Load saved settings
+      const savedKey = storage.get('stadiumiq_api_key', '');
+      const savedLang = storage.get('stadiumiq_lang', 'en');
+      const savedPersona = storage.get('stadiumiq_persona', 'fan');
+      const savedSpeak = storage.get('stadiumiq_speak', false);
+
+      // Apply saved settings
+      if (savedKey) {
+        GeminiAPI.init(savedKey, savedPersona, savedLang);
+        document.getElementById('api-key-input').value = savedKey;
+      }
+
+      i18n.setLanguage(savedLang);
+      document.getElementById('lang-selector').value = savedLang;
+      document.getElementById('settings-lang').value = savedLang;
+
+      currentPersona = savedPersona;
+      window.currentPersona = currentPersona;
+      updatePersonaUI(savedPersona);
+
+      document.getElementById('settings-persona').value = savedPersona;
+      document.getElementById('settings-speak').checked = savedSpeak;
+
+      // Start clock
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Render dashboard content
+      renderDashboard();
+
+      // Bind navigation
+      bindNavigation();
+      bindPersonaSwitcher();
+      bindSettings();
+      bindMobile();
+
+      // Initialize chat immediately (it's likely the first thing users use)
+      initComponent('chat');
+    }
+
+    // ============ Clock ============
+    function updateClock() {
+      const el = document.getElementById('header-time');
+      if (el) el.textContent = formatTime();
+    }
+
+    // ============ Dashboard Rendering ============
+    function renderDashboard() {
+      renderMatches();
+      renderVenues();
+      renderCrowdMini();
+      startDashboardUpdates();
+    }
+
+    function renderMatches() {
+      const container = document.getElementById('matches-container');
+      if (!container) return;
+
+      const teamFlags = {
+        'USA': '🇺🇸', 'Mexico': '🇲🇽', 'Brazil': '🇧🇷', 'Germany': '🇩🇪',
+        'France': '🇫🇷', 'Argentina': '🇦🇷', 'Spain': '🇪🇸', 'Portugal': '🇵🇹',
+        'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Japan': '🇯🇵', 'Italy': '🇮🇹', 'Netherlands': '🇳🇱',
+        'MEX': '🇲🇽'
+      };
+
+      container.innerHTML = MATCH_SCHEDULE.map(match => `
+        <article class="match-card" tabindex="0" aria-label="${match.home} vs ${match.away} at ${match.venue}">
+          <div class="match-teams">
+            <span class="team-flag" aria-hidden="true">${teamFlags[match.home] || '🏳️'}</span>
+            <span class="team-name">${match.home}</span>
+            <span class="match-vs" aria-hidden="true">vs</span>
+            <span class="team-name">${match.away}</span>
+            <span class="team-flag" aria-hidden="true">${teamFlags[match.away] || '🏳️'}</span>
+          </div>
+          <div class="match-meta">
+            <div class="match-stage">${match.stage}</div>
+            <div class="match-venue">📍 ${match.venue}</div>
+            <div class="match-time">🗓️ ${match.date} · ${match.time}</div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function renderVenues() {
+      const container = document.getElementById('venues-grid');
+      if (!container) return;
+
+      container.innerHTML = VENUES.slice(0, 4).map(venue => `
+        <article style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;transition:all 0.25s ease;cursor:default;" 
+          tabindex="0" 
+          aria-label="${venue.name} in ${venue.city}, capacity ${venue.capacity.toLocaleString()}"
+          onmouseover="this.style.borderColor='var(--primary)'"
+          onmouseout="this.style.borderColor='var(--border)'"
+        >
+          <div style="font-size:11px;color:var(--fifa-gold);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">${venue.country}</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:4px">${venue.name}</div>
+          <div style="font-size:11px;color:var(--text-secondary)">📍 ${venue.city}</div>
+          <div style="font-size:20px;font-weight:800;font-family:'Outfit',sans-serif;color:var(--primary-light);margin-top:8px">${(venue.capacity / 1000).toFixed(0)}K</div>
+          <div style="font-size:10px;color:var(--text-muted)">Capacity</div>
+        </article>
+      `).join('');
+    }
+
+    function renderCrowdMini() {
+      const container = document.getElementById('dash-crowd-mini');
+      if (!container) return;
+
+      const zones = [
+        { name: 'Gate 5 (South)', pct: 89, color: '#ef4444' },
+        { name: 'Main Pitch', pct: 95, color: '#ef4444' },
+        { name: 'Concessions', pct: 74, color: '#f97316' },
+        { name: 'Gate 1 (North)', pct: 65, color: '#f59e0b' },
+        { name: 'Gate 7 (West)', pct: 35, color: '#10b981' },
+        { name: 'VIP Level', pct: 82, color: '#f97316' }
+      ];
+
+      container.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${zones.map(z => `
+            <div style="display:grid;grid-template-columns:120px 1fr 48px;align-items:center;gap:8px">
+              <span style="font-size:11px;color:var(--text-secondary)">${z.name}</span>
+              <div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
+                <div style="width:${z.pct}%;height:100%;background:${z.color};border-radius:3px;transition:width 0.8s ease"></div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:${z.color};text-align:right">${z.pct}%</span>
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--text-muted)">Overall: <strong style="color:var(--text-primary)">78% (64,300 fans)</strong></span>
+          <button onclick="document.getElementById('nav-crowd').click()" style="background:var(--primary);color:white;border:none;padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;">View Full Dashboard</button>
+        </div>
+      `;
+    }
+
+    function startDashboardUpdates() {
+      setInterval(() => {
+        // Update KPIs with animated numbers
+        const fansEl = document.getElementById('kpi-fans');
+        if (fansEl) {
+          const current = parseInt(fansEl.textContent.replace(/,/g, ''));
+          const next = Math.min(82500, current + randomInRange(-200, 300));
+          animateCount(fansEl, current, next, 800);
+        }
+
+        // Update shuttle time
+        const shuttleEl = document.getElementById('kpi-shuttle');
+        if (shuttleEl) {
+          shuttleEl.textContent = `${randomInRange(3, 15)} min`;
+        }
+      }, 5000);
+    }
+
+    // ============ Component Initialization ============
+    function initComponent(page) {
+      if (initializedComponents[page]) return;
+      initializedComponents[page] = true;
+
+      switch (page) {
+        case 'chat':
+          ChatComponent.init(
+            document.getElementById('chat-container'),
+            currentPersona
+          );
+          break;
+        case 'crowd':
+          CrowdComponent.init(document.getElementById('crowd-container'));
+          break;
+        case 'navigation':
+          NavigationComponent.init(document.getElementById('navigation-container'));
+          break;
+        case 'transport':
+          TransportComponent.init(document.getElementById('transport-container'));
+          break;
+        case 'accessibility':
+          AccessibilityComponent.init(document.getElementById('accessibility-container'));
+          break;
+        case 'sustainability':
+          SustainabilityComponent.init(document.getElementById('sustainability-container'));
+          break;
+      }
+    }
+
+    // ============ Navigation ============
+    function bindNavigation() {
+      document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+      });
+    }
+
+    function navigateTo(page) {
+      if (currentPage === page) return;
+
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        item.removeAttribute('aria-current');
+      });
+
+      const activeNav = document.getElementById(`nav-${page}`);
+      if (activeNav) {
+        activeNav.classList.add('active');
+        activeNav.setAttribute('aria-current', 'page');
+      }
+
+      // Hide all sections
+      document.querySelectorAll('.page-section').forEach(s => {
+        s.classList.remove('active');
+      });
+
+      // Show target section
+      const targetSection = document.getElementById(`page-${page}`);
+      if (targetSection) targetSection.classList.add('active');
+
+      // Update breadcrumb
+      const breadcrumb = document.getElementById('breadcrumb-current');
+      if (breadcrumb) {
+        const pageNames = {
+          dashboard: 'Dashboard',
+          chat: 'AI Assistant',
+          crowd: 'Crowd Management',
+          navigation: 'Navigation',
+          transport: 'Transportation',
+          accessibility: 'Accessibility',
+          sustainability: 'Eco Tracker'
+        };
+        breadcrumb.textContent = pageNames[page] || page;
+      }
+
+      currentPage = page;
+
+      // Initialize component on first visit
+      initComponent(page);
+
+      // Close mobile sidebar
+      closeMobileSidebar();
+    }
+
+    // ============ Persona Switcher ============
+    function bindPersonaSwitcher() {
+      document.querySelectorAll('.persona-btn[data-persona]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const persona = btn.dataset.persona;
+          switchPersona(persona);
+        });
+      });
+    }
+
+    function switchPersona(persona) {
+      currentPersona = persona;
+      window.currentPersona = persona;
+
+      // Update UI
+      document.querySelectorAll('.persona-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+
+      const activeBtn = document.getElementById(`persona-${persona}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-pressed', 'true');
+      }
+
+      // Update Gemini API persona
+      GeminiAPI.setPersona(persona);
+
+      // Update chat if it was initialized
+      if (initializedComponents['chat']) {
+        ChatComponent.updatePersona(persona);
+      }
+
+      // Save preference
+      storage.set('stadiumiq_persona', persona);
+
+      showToast(`Switched to ${persona.charAt(0).toUpperCase() + persona.slice(1)} mode`, 'success');
+    }
+
+    function updatePersonaUI(persona) {
+      document.querySelectorAll('.persona-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-pressed', 'false');
+      });
+
+      const activeBtn = document.getElementById(`persona-${persona}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+        activeBtn.setAttribute('aria-pressed', 'true');
+      }
+    }
+
+    // ============ Settings ============
+    function bindSettings() {
+      const settingsBtn = document.getElementById('settings-btn');
+      const overlay = document.getElementById('settings-overlay');
+      const cancelBtn = document.getElementById('settings-cancel');
+      const saveBtn = document.getElementById('settings-save');
+      const langSelector = document.getElementById('lang-selector');
+
+      settingsBtn?.addEventListener('click', () => {
+        overlay.classList.add('open');
+        document.getElementById('api-key-input').focus();
+      });
+
+      cancelBtn?.addEventListener('click', () => overlay.classList.remove('open'));
+
+      overlay?.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('open');
+      });
+
+      // Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') overlay.classList.remove('open');
+      });
+
+      saveBtn?.addEventListener('click', saveSettings);
+
+      langSelector?.addEventListener('change', (e) => {
+        changeLanguage(e.target.value);
+        document.getElementById('settings-lang').value = e.target.value;
+      });
+
+      document.getElementById('settings-lang')?.addEventListener('change', (e) => {
+        document.getElementById('lang-selector').value = e.target.value;
+      });
+    }
+
+    function saveSettings() {
+      const apiKey = document.getElementById('api-key-input').value.trim();
+      const lang = document.getElementById('settings-lang').value;
+      const persona = document.getElementById('settings-persona').value;
+      const speak = document.getElementById('settings-speak').checked;
+
+      // Save API key
+      if (apiKey) {
+        storage.set('stadiumiq_api_key', apiKey);
+        GeminiAPI.init(apiKey, persona, lang);
+        showToast('✅ API key saved! Full AI mode enabled.', 'success');
+      } else {
+        storage.remove('stadiumiq_api_key');
+        showToast('ℹ️ Running in demo mode (no API key)', 'info');
+      }
+
+      // Save other settings
+      storage.set('stadiumiq_lang', lang);
+      storage.set('stadiumiq_persona', persona);
+      storage.set('stadiumiq_speak', speak);
+
+      changeLanguage(lang);
+      switchPersona(persona);
+
+      document.getElementById('settings-overlay').classList.remove('open');
+    }
+
+    function changeLanguage(lang) {
+      i18n.setLanguage(lang);
+      GeminiAPI.setLanguage(lang);
+      storage.set('stadiumiq_lang', lang);
+      document.getElementById('lang-selector').value = lang;
+      showToast(`Language: ${lang.toUpperCase()}`, 'info');
+    }
+
+    // ============ Mobile ============
+    function bindMobile() {
+      const hamburger = document.getElementById('hamburger-btn');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+      hamburger?.addEventListener('click', () => {
+        const sidebar = document.getElementById('sidebar');
+        const isOpen = sidebar.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen.toString());
+        sidebarOverlay.style.display = isOpen ? 'block' : 'none';
+      });
+
+      sidebarOverlay?.addEventListener('click', closeMobileSidebar);
+    }
+
+    function closeMobileSidebar() {
+      document.getElementById('sidebar')?.classList.remove('open');
+      document.getElementById('sidebar-overlay').style.display = 'none';
+      document.getElementById('hamburger-btn')?.setAttribute('aria-expanded', 'false');
+    }
+
+    // ============ Boot ============
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
