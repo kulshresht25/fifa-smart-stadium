@@ -931,6 +931,25 @@ const state = {
   mapScale: 1
 };
 
+// ====== RATE LIMITER ======
+const rateLimiter = {
+  tokens: 10,
+  maxTokens: 10,
+  refillRate: 10 / 60000, // 10 tokens per 60 seconds
+  lastRefill: Date.now(),
+  consume() {
+    const now = Date.now();
+    const elapsed = now - this.lastRefill;
+    this.tokens = Math.min(this.maxTokens, this.tokens + elapsed * this.refillRate);
+    this.lastRefill = now;
+    if (this.tokens >= 1) {
+      this.tokens -= 1;
+      return true;
+    }
+    return false;
+  }
+};
+
 // ====== CONSTANTS ======
 const TOTAL_CAPACITY = 82500;
 const VENUES = [
@@ -1061,7 +1080,7 @@ function showToast(msg,type='info',dur=3000){
   const icons={info:'ℹ️',success:'✅',warning:'⚠️',error:'❌'};
   const t=document.createElement('div');
   t.style.cssText=`padding:11px 16px;border-radius:10px;color:#fff;background:${colors[type]||colors.info};font-size:13px;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.3);animation:fadeIn .3s ease;max-width:280px;display:flex;align-items:center;gap:7px;font-family:Inter,sans-serif`;
-  t.innerHTML=`${icons[type]||''} ${msg}`;
+  t.innerHTML=`${icons[type]||''} ${sanitize(msg)}`;
   c.appendChild(t);
   setTimeout(()=>t.remove(),dur);
 }
@@ -1069,14 +1088,15 @@ function showToast(msg,type='info',dur=3000){
 function sanitize(s){const d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
 
 function parseMarkdown(t){
-  return t
+  return sanitize(t)
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
     .replace(/\*(.+?)\*/g,'<em>$1</em>')
     .replace(/`(.+?)`/g,'<code>$1</code>')
     .replace(/^#{1,3}\s(.+)/gm,'<h4>$1</h4>')
     .replace(/\n- (.+)/g,'\n<li>$1</li>')
     .replace(/\n/g,'<br>')
-    .replace(/(<li>[\s\S]*?<\/li>(?:\s*<li>[\s\S]*?<\/li>)*)/g,'<ul>$1</ul>');
+    .replace(/(<li>[\s\S]*?<\/li>(?:\s*<li>[\s\S]*?<\/li>)*)/g,'<ul>$1</ul>')
+    .replace(/\[(.+?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 }
 
 function storeGet(k,def=null){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch{return def;}}
@@ -1219,6 +1239,9 @@ function initDashboard(){
     const se=document.getElementById('kpi-shuttle');
     if(se)se.textContent=rnd(3,15)+' min';
   },5000);
+
+  // Generate dynamic AI Operational Summary
+  generateOperationalInsight('dash-ai-content');
 }
 
 // ====== CHAT ======
@@ -1315,6 +1338,10 @@ async function sendMessage(){
 }
 
 async function callGemini(userMsg){
+  if (!rateLimiter.consume()) {
+    showToast('⚠️ Slow down! You are sending requests too quickly. Please wait a moment.', 'warning', 5000);
+    return { text: '⚠️ **Rate Limit Exceeded**\n\nYou are sending requests too quickly. Please slow down and try again in a few seconds.', isFallback: true };
+  }
   if(!state.apiKey){
     return{text:getFallback(userMsg),isFallback:true};
   }
@@ -1428,49 +1455,97 @@ function renderZones(){
   }).join('');
 }
 
-async function runCrowdAI(){
-  const panel=document.getElementById('ai-insight-panel');
-  const content=document.getElementById('insight-content');
-  if(!panel||!content)return;
-  panel.style.display='block';
-  content.innerHTML='<div class="insight-loading"><div class="spinner"></div><span>Analyzing crowd patterns with AI...</span></div>';
-  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
-  const avgD=Object.values(state.crowdData).reduce((a,z)=>a+z.current,0)/Object.keys(state.crowdData).length;
-  const occ=Math.round((avgD/100)*TOTAL_CAPACITY);
-  const dp=Math.round((occ/TOTAL_CAPACITY)*100);
-  if(state.apiKey){
-    try{
-      const prompt=`As an AI stadium operations analyst for FIFA World Cup 2026, analyze this real-time data and provide a brief 3-bullet operational summary with urgent alerts:\n\nOccupancy: ${fmt(occ)}/${fmt(TOTAL_CAPACITY)} (${dp}%)\nCritical zones: Gate 5 South at 89%, Pitch Level at 95%\nZones: ${Object.values(state.crowdData).map(z=>z.name+': '+Math.round(z.current)+'%').join(', ')}\n\nFormat response as JSON: { "summary": "...", "alerts": ["...","..."], "recommendation": "...", "severity": "low|medium|high" }`;
-      const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`,{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:.3,maxOutputTokens:512}})
+async function generateOperationalInsight(targetId = 'insight-content') {
+  const isDashboard = targetId === 'dash-ai-content';
+  const content = document.getElementById(targetId);
+  if (!content) return;
+  
+  if (!isDashboard) {
+    const panel = document.getElementById('ai-insight-panel');
+    if (panel) {
+      panel.style.display = 'block';
+      panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  }
+  
+  content.innerHTML = '<div class="insight-loading"><div class="spinner"></div><span>Analyzing stadium intelligence...</span></div>';
+  
+  if (Object.keys(state.crowdData).length === 0) {
+    ZONE_DATA.forEach(z=>{state.crowdData[z.id]={...z,current:Math.min(100,Math.max(5,z.base+rnd(-8,8)))}});
+  }
+  
+  const avgD = Object.values(state.crowdData).reduce((a,z) => a+z.current, 0) / Object.keys(state.crowdData).length;
+  const occ = Math.round((avgD/100) * TOTAL_CAPACITY);
+  const dp = Math.round((occ/TOTAL_CAPACITY) * 100);
+  
+  let insightData;
+  
+  if (state.apiKey) {
+    try {
+      const prompt = `As an AI stadium operations analyst for FIFA World Cup 2026, analyze this real-time data and provide a brief 4-bullet operational summary with severity classification (low, medium, high):\n\nOccupancy: ${fmt(occ)}/${fmt(TOTAL_CAPACITY)} (${dp}%)\nZones: ${Object.values(state.crowdData).map(z=>z.name+': '+Math.round(z.current)+'%').join(', ')}\n\nFormat response as JSON: { "summary": "...", "alerts": ["...","..."], "recommendation": "...", "severity": "low|medium|high" }`;
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: .3, maxOutputTokens: 512 } })
       });
-      if(r.ok){
-        const d=await r.json();
-        const txt=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
-        const jm=txt.match(/\{[\s\S]*\}/);
-        if(jm){
-          const ins=JSON.parse(jm[0]);
-          const sc={'low':'#10b981','medium':'#f59e0b','high':'#ef4444'};
-          const col=sc[ins.severity]||'#3b82f6';
-          content.innerHTML=`<div class="insight-result">
-            <div class="insight-sev" style="background:${col}22;border-color:${col}">Severity: <strong>${(ins.severity||'LOW').toUpperCase()}</strong></div>
-            <div><h4>📊 Summary</h4><p>${ins.summary||''}</p></div>
-            ${ins.alerts?.length?`<div><h4>⚠️ Alerts</h4><ul>${ins.alerts.map(a=>`<li>${a}</li>`).join('')}</ul></div>`:''}
-            ${ins.recommendation?`<div><h4>💡 Recommendation</h4><p>${ins.recommendation}</p></div>`:''}
-          </div>`;
-          return;
+      if (r.ok) {
+        const d = await r.json();
+        const txt = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const jm = txt.match(/\{[\s\S]*\}/);
+        if (jm) {
+          insightData = JSON.parse(jm[0]);
         }
       }
-    }catch(e){}
+    } catch (e) {
+      console.warn('Gemini crowd AI analysis failed:', e);
+    }
   }
-  // Fallback
-  content.innerHTML=`<div class="insight-result">
-    <div class="insight-sev" style="background:#f59e0b22;border-color:#f59e0b">Severity: <strong>MEDIUM</strong></div>
-    <div><h4>📊 Summary</h4><p>Stadium at ${dp}% capacity. Gate 5 South experiencing above-normal traffic. Crowd flow manageable with minor bottlenecks at south entrance.</p></div>
-    <div><h4>⚠️ Alerts</h4><ul><li>Gate 5 South at 89% — recommend opening additional entry lanes</li><li>Concession queues exceeding 12-minute threshold in Section D</li></ul></div>
-    <div><h4>💡 Recommendation</h4><p>Deploy 4 additional crowd marshals to Gate 5. Activate secondary concession stations in Sections D and F. Send fan notification to use Gate 7 for smoother entry (only 2 min wait).</p></div>
-  </div>`;
+  
+  // Fallback if API fails or is missing
+  if (!insightData) {
+    insightData = {
+      severity: 'medium',
+      summary: `Stadium at ${dp}% capacity. Gate 5 South experiencing above-normal traffic. Crowd flow manageable with minor bottlenecks at south entrance.`,
+      alerts: [
+        `Gate 5 South at 89% — recommend opening additional entry lanes`,
+        `Concession queues exceeding 12-minute threshold in Section D`
+      ],
+      recommendation: `Deploy 4 additional crowd marshals to Gate 5. Activate secondary concession stations in Sections D and F. Send fan notification to use Gate 7 for smoother entry (only 2 min wait).`
+    };
+  }
+  
+  const sc = { 'low': '#10b981', 'medium': '#f59e0b', 'high': '#ef4444' };
+  const col = sc[insightData.severity] || '#3b82f6';
+  
+  const safeSummary = sanitize(insightData.summary || '');
+  const safeAlerts = (insightData.alerts || []).map(a => `<li>${sanitize(a)}</li>`).join('');
+  const safeRec = sanitize(insightData.recommendation || '');
+  const safeSeverity = sanitize(insightData.severity || 'LOW').toUpperCase();
+  
+  if (isDashboard) {
+    // For Dashboard: Render 4 neat alert-like boxes as requested
+    content.innerHTML = `
+      <div style="padding:10px;background:${col}14;border:1px solid ${col}4d;border-radius:9px;font-size:12px">🤖 <strong>AI Summary:</strong> ${safeSummary}</div>
+      ${(insightData.alerts || []).map(a => `
+        <div style="padding:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:9px;font-size:12px">⚠️ <strong>Alert:</strong> ${sanitize(a)}</div>
+      `).join('')}
+      <div style="padding:10px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:9px;font-size:12px">✅ <strong>Recommendation:</strong> ${safeRec}</div>
+    `;
+  } else {
+    // For Crowd page: Render original layout but sanitized
+    content.innerHTML = `
+      <div class="insight-result">
+        <div class="insight-sev" style="background:${col}22;border-color:${col}">Severity: <strong>${safeSeverity}</strong></div>
+        <div><h4>📊 Summary</h4><p>${safeSummary}</p></div>
+        ${insightData.alerts?.length ? `<div><h4>⚠️ Alerts</h4><ul>${safeAlerts}</ul></div>` : ''}
+        ${insightData.recommendation ? `<div><h4>💡 Recommendation</h4><p>${safeRec}</p></div>` : ''}
+      </div>
+    `;
+  }
+}
+
+async function runCrowdAI() {
+  await generateOperationalInsight('insight-content');
 }
 
 // ====== NAVIGATION ======
@@ -1683,24 +1758,81 @@ function renderParking(){
   }).join('');
 }
 
-function planJourney(){
+async function planJourney(){
   const from=document.getElementById('journey-from')?.value.trim();
   if(!from){showToast('Enter your starting location','warning');return;}
   const mode=document.querySelector('input[name="tmode"]:checked')?.value||'transit';
-  const routes={
-    transit:{steps:[`🚶 Travel to nearest transit hub from ${from}`,'🚆 Board NJ Transit Meadowlands Line','⏱️ ~35 min journey to Meadowlands Station','🚶 5-minute walk to MetLife Stadium Gate 1'],time:'45 min',cost:'$4.25',note:'Most eco-friendly option ♻️'},
-    shuttle:{steps:[`🚗 Travel to shuttle pickup at Penn Station from ${from}`,'🚌 Board MetLife Express Shuttle (every 15 min)','⏱️ ~25 min direct ride to stadium','🏟️ Drops at Gate 1 Main Entrance'],time:'35 min',cost:'$8.00',note:'Pre-book recommended during peak hours'},
-    drive:{steps:[`🚗 Navigate to NJ-3 East from ${from}`,'🛣️ Follow signs to MetLife Stadium / Meadowlands','🅿️ Parking available in Lots A, B, C','🚶 Walk from parking to stadium entrance'],time:'30-60 min',cost:'$40-120',note:'⚠️ Expect heavy traffic 2 hours before kickoff'},
-    accessible:{steps:[`♿ Accessible transit available from ${from}`,'🚌 Accessible shuttle with ramp — every 20 min','🏟️ Arrive at Gate 2 (fully accessible)','♿ Stadium mobility assistance on request'],time:'40 min',cost:'Free for mobility aid users',note:'Book via accessibility hotline: +1 (555) FIFA-ADA'}
-  };
-  const r=routes[mode];
   const result=document.getElementById('journey-result');
   if(!result)return;
+  
   result.style.display='block';
+  result.innerHTML='<div class="insight-loading"><div class="spinner"></div><span>Planning your journey with AI...</span></div>';
+  
+  const dest="MetLife Stadium";
+  const modeLabels = {
+    transit: 'Public Transit (train/bus/metro)',
+    shuttle: 'Dedicated Shuttle Bus',
+    drive: 'Driving (personal car/taxi/rideshare)',
+    accessible: 'Accessible Transport (wheelchair ramp / specialized shuttle)'
+  };
+  
+  let routePlan;
+  
+  if (state.apiKey) {
+    try {
+      const prompt = `As a transportation assistant for the FIFA World Cup 2026 at MetLife Stadium, generate a step-by-step route plan from "${from}" to "${dest}" using the transportation mode "${modeLabels[mode]}".
+      
+      Format the response in JSON format exactly like this:
+      {
+        "time": "Estimated total travel time (e.g. 45 min)",
+        "cost": "Estimated cost (e.g. $8.50)",
+        "steps": [
+          "Step 1...",
+          "Step 2...",
+          "Step 3..."
+        ],
+        "note": "A short, helpful sustainability or traffic tip related to this mode"
+      }`;
+      
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { temperature: .3, maxOutputTokens: 512 } })
+      });
+      if (r.ok) {
+        const d = await r.json();
+        const txt = d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        const jm = txt.match(/\{[\s\S]*\}/);
+        if (jm) {
+          routePlan = JSON.parse(jm[0]);
+        }
+      }
+    } catch (e) {
+      console.warn('Gemini route planner failed:', e);
+    }
+  }
+  
+  // Fallback if no API key or call failed
+  if (!routePlan) {
+    const routes={
+      transit:{steps:[`🚶 Travel to nearest transit hub from ${from}`,'🚆 Board NJ Transit Meadowlands Line','⏱️ ~35 min journey to Meadowlands Station','🚶 5-minute walk to MetLife Stadium Gate 1'],time:'45 min',cost:'$4.25',note:'Most eco-friendly option ♻️'},
+      shuttle:{steps:[`🚗 Travel to shuttle pickup at Penn Station from ${from}`,'🚌 Board MetLife Express Shuttle (every 15 min)','⏱️ ~25 min direct ride to stadium','🏟️ Drops at Gate 1 Main Entrance'],time:'35 min',cost:'$8.00',note:'Pre-book recommended during peak hours'},
+      drive:{steps:[`🚗 Navigate to NJ-3 East from ${from}`,'🛣️ Follow signs to MetLife Stadium / Meadowlands','🅿️ Parking available in Lots A, B, C','🚶 Walk from parking to stadium entrance'],time:'30-60 min',cost:'$40-120',note:'⚠️ Expect heavy traffic 2 hours before kickoff'},
+      accessible:{steps:[`♿ Accessible transit available from ${from}`,'🚌 Accessible shuttle with ramp — every 20 min','🏟️ Arrive at Gate 2 (fully accessible)','♿ Stadium mobility assistance on request'],time:'40 min',cost:'Free for mobility aid users',note:'Book via accessibility hotline: +1 (555) FIFA-ADA'}
+    };
+    routePlan = routes[mode];
+  }
+  
+  // Render safely using sanitization
+  const safeTime = sanitize(routePlan.time || 'N/A');
+  const safeCost = sanitize(routePlan.cost || 'N/A');
+  const safeSteps = (routePlan.steps || []).map(s => `<li>${sanitize(s)}</li>`).join('');
+  const safeNote = sanitize(routePlan.note || '');
+  
   result.innerHTML=`<div class="journey-plan">
-    <div class="j-summary"><span>⏱️ ${r.time}</span><span>💰 ${r.cost}</span></div>
-    <ol class="j-steps">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
-    <div class="j-note">💡 ${r.note}</div>
+    <div class="j-summary"><span>⏱️ ${safeTime}</span><span>💰 ${safeCost}</span></div>
+    <ol class="j-steps">${safeSteps}</ol>
+    <div class="j-note">💡 ${safeNote}</div>
   </div>`;
 }
 
