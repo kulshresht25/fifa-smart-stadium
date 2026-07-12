@@ -13,16 +13,16 @@
 /* ======= RESET & BASE ======= */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:16px}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#060d1a;color:#f8fafc;min-height:100vh;overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#060d1a;color:#f8fafc;height:100vh;overflow:hidden;line-height:1.6;-webkit-font-smoothing:antialiased}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:#0d1b2a}
 ::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#3b82f6}
 
 /* ======= LAYOUT ======= */
-#app{display:flex;min-height:100vh}
+#app{display:flex;height:100vh;overflow:hidden}
 .sidebar{width:240px;background:#0d1b2a;border-right:1px solid #1e3a5f;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto;transition:transform .25s ease}
-.main-content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
+.main-content{margin-left:240px;flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
 
 /* ======= SIDEBAR ======= */
 .sidebar-logo{padding:18px 16px;border-bottom:1px solid #1e3a5f;display:flex;align-items:center;gap:12px}
@@ -1168,7 +1168,13 @@ function saveSettings(){
   const lang=document.getElementById('set-lang').value;
   const persona=document.getElementById('set-persona').value;
   const speak_=document.getElementById('set-speak').checked;
-  if(key){storeSet('sq_apikey',key);state.apiKey=key;showToast('✅ API key saved! Full AI mode enabled.','success');}
+  if(key){
+    if(!key.startsWith('AIzaSy')){
+      showToast('⚠️ Warning: Gemini API keys usually start with "AIzaSy". The key you entered might be invalid.','warning',6000);
+    }
+    storeSet('sq_apikey',key);state.apiKey=key;
+    showToast('✅ API key saved! Full AI mode enabled.','success');
+  }
   else{storeSet('sq_apikey','');state.apiKey='';showToast('Demo mode (no API key)','info');}
   storeSet('sq_lang',lang);state.lang=lang;
   storeSet('sq_speak',speak_);state.voiceEnabled=speak_;
@@ -1314,6 +1320,9 @@ async function sendMessage(){
 async function callGemini(userMsg){
   if(!state.apiKey){
     return{text:getFallback(userMsg),isFallback:true};
+  }
+  if(!state.apiKey.startsWith('AIzaSy')){
+    return{text:`⚠️ **API Key Authentication Error**\n\nThe API key you entered is invalid. Gemini API keys must start with \`AIzaSy\` (the standard Google AI Studio format).\n\nIf you are using a Firebase token or other credential (such as one starting with \`AQ.\`), it will not work here. Please generate a free API key at **[aistudio.google.com](https://aistudio.google.com/app/apikey)** and save it in **⚙️ Settings**.\n\n---\n\n💡 **Local Assistant Fallback:**\n\n${getFallback(userMsg)}`,isFallback:true};
   }
   const langCtx={en:'Respond in English.',es:'Responde en español.',fr:'Réponds en français.',ar:'أجب باللغة العربية.',pt:'Responda em português.',de:'Antworte auf Deutsch.',zh:'用中文回答.',ja:'日本語で答えてください.',hi:'हिंदी में उत्तर दें.',ko:'한국어로 답하세요.'};
   const prompt=`${PERSONA_PROMPTS[state.persona]||PERSONA_PROMPTS.fan}\n\nLANGUAGE: ${langCtx[state.lang]||langCtx.en}\n\nSTADIUM CONTEXT:\n- Event: FIFA World Cup 2026\n- Stadium: MetLife Stadium (82,500 capacity, 78% occupied)\n- Current Time: ${new Date().toLocaleTimeString()}\n\nUSER QUERY: ${userMsg}\n\nProvide a helpful, accurate response. For navigation give specific gate/section directions. For emergencies direct to security (Gate 1, Section A) or first aid (Sections B, E, H). Keep responses concise but complete.`;
