@@ -298,8 +298,7 @@ const SustainabilityComponent = (() => {
       );
 
       if (pledges.length === 0) {
-        const { showToast } = require('../utils/helpers.js');
-        alert('Please select at least one pledge option!');
+        showToast('Please select at least one pledge option!', 'warning');
         return;
       }
 
