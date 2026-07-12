@@ -928,6 +928,7 @@ const state = {
   crowdInterval: null,
   transInterval: null,
   ecoInterval: null,
+  ecoTipInterval: null,
   mapScale: 1
 };
 
@@ -1234,6 +1235,7 @@ function initDashboard(){
   }
   // Live KPI updates
   setInterval(()=>{
+    if(document.hidden||state.page!=='dashboard')return;
     const el=document.getElementById('kpi-fans');
     if(el){const c=parseInt(el.textContent.replace(/,/g,''));el.textContent=fmt(Math.min(82500,Math.max(50000,c+rnd(-200,300))));}
     const se=document.getElementById('kpi-shuttle');
@@ -1393,6 +1395,7 @@ function initCrowd(){
   if(canvas)drawHeatmap(canvas);
   renderZones();
   state.crowdInterval=setInterval(()=>{
+    if(document.hidden||state.page!=='crowd')return;
     Object.keys(state.crowdData).forEach(id=>{
       const z=state.crowdData[id];
       z.current=Math.min(100,Math.max(5,z.current+(rnd(-5,5)*0.3)));
@@ -1701,6 +1704,7 @@ function initTransport(){
   renderMetro();
   renderParking();
   state.transInterval=setInterval(()=>{
+    if(document.hidden||state.page!=='transport')return;
     SHUTTLES.forEach(s=>{s.nextIn=Math.max(1,s.nextIn-1);if(s.nextIn<=0)s.nextIn=s.freq;s.occ=Math.min(s.cap,Math.max(0,s.occ+rnd(-2,3)));});
     METRO.forEach(m=>{m.next=Math.max(1,m.next-1);if(m.next<=0)m.next=rnd(5,20);});
     renderShuttles();renderMetro();
@@ -1896,9 +1900,14 @@ function initSustainability(){
   renderTipDots();
   document.getElementById('tip-prev')?.addEventListener('click',()=>{tipIdx=(tipIdx-1+ECO_TIPS.length)%ECO_TIPS.length;updateTip();});
   document.getElementById('tip-next')?.addEventListener('click',()=>{tipIdx=(tipIdx+1)%ECO_TIPS.length;updateTip();});
-  setInterval(()=>{tipIdx=(tipIdx+1)%ECO_TIPS.length;updateTip();},6000);
+  state.ecoTipInterval=setInterval(()=>{
+    if(document.hidden||state.page!=='sustainability')return;
+    tipIdx=(tipIdx+1)%ECO_TIPS.length;
+    updateTip();
+  },6000);
   document.getElementById('pledge-btn')?.addEventListener('click',handlePledge);
   state.ecoInterval=setInterval(()=>{
+    if(document.hidden||state.page!=='sustainability')return;
     ecoData.carbon=Math.round((ecoData.carbon+rnd(0,3)*.1)*10)/10;
     ecoData.plastic+=rnd(5,20);
     ecoData.trees=Math.round(ecoData.carbon*2);
