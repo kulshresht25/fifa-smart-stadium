@@ -1,774 +1,1912 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="StadiumIQ — AI-powered smart stadium and tournament operations platform for FIFA World Cup 2026. Intelligent navigation, crowd management, accessibility, transport, and sustainability tracking." />
-  <meta name="keywords" content="FIFA World Cup 2026, smart stadium, AI assistant, crowd management, navigation, accessibility, transportation, sustainability" />
-  <meta name="author" content="StadiumIQ Team" />
-  <meta property="og:title" content="StadiumIQ — FIFA World Cup 2026 Intelligence Hub" />
-  <meta property="og:description" content="Generative AI-powered stadium operations and fan experience platform" />
-  <meta property="og:type" content="website" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="StadiumIQ — AI-powered FIFA World Cup 2026 Smart Stadium Operations Platform"/>
+<title>StadiumIQ — FIFA World Cup 2026 Intelligence Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ======= RESET & BASE ======= */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#060d1a;color:#f8fafc;min-height:100vh;overflow-x:hidden;line-height:1.6;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#0d1b2a}
+::-webkit-scrollbar-thumb{background:#1e3a5f;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#3b82f6}
 
-  <!-- Security headers via meta -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-module'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://generativelanguage.googleapis.com; img-src 'self' data:;" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+/* ======= LAYOUT ======= */
+#app{display:flex;min-height:100vh}
+.sidebar{width:240px;background:#0d1b2a;border-right:1px solid #1e3a5f;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto;transition:transform .25s ease}
+.main-content{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh}
 
-  <title>StadiumIQ — FIFA World Cup 2026 Intelligence Hub</title>
+/* ======= SIDEBAR ======= */
+.sidebar-logo{padding:18px 16px;border-bottom:1px solid #1e3a5f;display:flex;align-items:center;gap:12px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 0 20px rgba(59,130,246,.3)}
+.logo-title{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2}
+.logo-sub{font-size:10px;color:#475569;line-height:1.3}
+.persona-section{padding:12px;border-bottom:1px solid #1e3a5f}
+.persona-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#475569;margin-bottom:8px;display:block}
+.persona-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.persona-btn{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;padding:6px 8px;border-radius:8px;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s ease;text-align:center;font-family:'Inter',sans-serif}
+.persona-btn:hover{border-color:#3b82f6;color:#3b82f6}
+.persona-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff;box-shadow:0 0 12px rgba(59,130,246,.4)}
+.nav-menu{padding:10px 8px;flex:1;display:flex;flex-direction:column;gap:3px}
+.nav-sec-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#475569;padding:8px 8px 4px;display:block}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:#94a3b8;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s ease;border:1px solid transparent;width:100%;background:none;font-family:'Inter',sans-serif;position:relative}
+.nav-item:hover{background:#1a2740;color:#f8fafc;border-color:#1e3a5f}
+.nav-item.active{background:rgba(59,130,246,.15);color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:#3b82f6;border-radius:0 2px 2px 0}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:#ef4444;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px}
+.sidebar-foot{padding:12px;border-top:1px solid #1e3a5f;display:flex;flex-direction:column;gap:8px}
+.lang-sel{width:100%;background:#111927;border:1px solid #1e3a5f;color:#f8fafc;border-radius:8px;padding:8px 10px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;outline:none}
+.settings-btn{width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;border-radius:8px;font-size:13px;cursor:pointer;transition:all .15s ease;font-family:'Inter',sans-serif}
+.settings-btn:hover{border-color:#3b82f6;color:#3b82f6}
 
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+/* ======= HEADER ======= */
+.top-header{height:60px;background:#0d1b2a;border-bottom:1px solid #1e3a5f;display:flex;align-items:center;padding:0 20px;gap:14px;position:sticky;top:0;z-index:50;backdrop-filter:blur(12px)}
+.breadcrumb-root{font-size:12px;color:#475569}
+.breadcrumb-sep{color:#475569;font-size:12px}
+.breadcrumb-cur{font-size:14px;font-weight:600;color:#f8fafc}
+.live-indicator{display:flex;align-items:center;gap:7px;padding:5px 11px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:20px;margin-left:auto}
+.live-dot{width:7px;height:7px;background:#ef4444;border-radius:50%;animation:pulse 1.5s ease infinite}
+.live-txt{font-size:11px;font-weight:700;color:#ef4444;letter-spacing:1px}
+.header-match{display:flex;align-items:center;gap:7px;padding:5px 12px;background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.25);border-radius:20px;font-size:12px;font-weight:600;color:#c9a227}
+.header-time{font-size:13px;color:#94a3b8;font-weight:500}
+.ham-btn{display:none;background:none;border:none;color:#f8fafc;font-size:20px;cursor:pointer;padding:4px;margin-right:8px}
 
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="./styles/main.css" />
+/* ======= PAGE CONTENT ======= */
+.page-content{flex:1;padding:22px;overflow-y:auto}
+.page-section{display:none;animation:fadeIn .3s ease}
+.page-section.active{display:block}
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
+/* ======= DASHBOARD ======= */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px;cursor:default;transition:all .25s ease;position:relative;overflow:hidden}
+.kpi-card:hover{border-color:#3b82f6;box-shadow:0 0 20px rgba(59,130,246,.2);transform:translateY(-2px)}
+.kpi-icon{font-size:26px;margin-bottom:10px;display:block}
+.kpi-val{font-size:26px;font-weight:800;font-family:'Outfit',sans-serif;line-height:1;margin-bottom:4px}
+.kpi-lbl{font-size:12px;color:#94a3b8;font-weight:500;margin-bottom:6px}
+.kpi-trend{font-size:11px;font-weight:600}
+.trend-up{color:#10b981}
+.trend-down{color:#ef4444}
+.trend-neutral{color:#64748b}
+.dash-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.panel{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:11px;border-bottom:1px solid #1e3a5f}
+.panel-hdr h3{font-size:14px;font-weight:700}
+.live-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.35);border-radius:20px;font-size:10px;font-weight:700;color:#ef4444;letter-spacing:1px}
+.live-badge::before{content:'';width:5px;height:5px;background:#ef4444;border-radius:50%;animation:pulse 1.5s ease infinite}
+.match-card{display:flex;align-items:center;gap:14px;padding:13px;background:#1a2740;border:1px solid #1e3a5f;border-radius:10px;margin-bottom:10px;transition:all .15s ease}
+.match-card:hover{border-color:#3b82f6}
+.match-teams{flex:1;display:flex;align-items:center;gap:10px;justify-content:center}
+.t-flag{font-size:22px}
+.t-name{font-size:13px;font-weight:600}
+.m-vs{font-size:11px;color:#475569;font-weight:700}
+.match-meta{text-align:right;min-width:120px}
+.m-stage{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#c9a227;font-weight:700}
+.m-venue{font-size:11px;color:#94a3b8;margin-top:2px}
+.m-time{font-size:11px;color:#475569;margin-top:2px}
+.venues-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px}
+.venue-card{background:#111927;border:1px solid #1e3a5f;border-radius:12px;padding:14px;transition:all .15s ease;cursor:default}
+.venue-card:hover{border-color:#3b82f6}
+.v-country{font-size:10px;color:#c9a227;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.v-name{font-size:13px;font-weight:700;margin-bottom:3px}
+.v-city{font-size:11px;color:#94a3b8}
+.v-cap{font-size:20px;font-weight:800;font-family:'Outfit',sans-serif;color:#60a5fa;margin-top:8px}
+.v-cap-lbl{font-size:10px;color:#475569}
+
+/* ======= CHAT ======= */
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 104px);background:#111927;border:1px solid #1e3a5f;border-radius:16px;overflow:hidden}
+.chat-hdr{background:#0d1b2a;border-bottom:1px solid #1e3a5f;padding:13px 18px;display:flex;align-items:center;justify-content:space-between}
+.chat-hdr-left{display:flex;align-items:center;gap:12px}
+.chat-avatar{width:40px;height:40px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;position:relative;flex-shrink:0}
+.ai-online-dot{position:absolute;top:-2px;right:-2px;width:11px;height:11px;background:#10b981;border-radius:50%;border:2px solid #0d1b2a;animation:pulse 2s ease infinite}
+.chat-hdr h3{font-size:14px;font-weight:700;margin-bottom:2px}
+.chat-status{font-size:11px;color:#10b981}
+.chat-hdr-right{display:flex;gap:8px}
+.sugg-bar{padding:10px 14px;display:flex;gap:7px;overflow-x:auto;border-bottom:1px solid #1e3a5f;background:#0d1b2a;flex-wrap:nowrap;scrollbar-width:none}
+.sugg-bar::-webkit-scrollbar{display:none}
+.sugg-chip{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;padding:5px 13px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s ease;font-family:'Inter',sans-serif;flex-shrink:0}
+.sugg-chip:hover{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.chat-msgs{flex:1;padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:#060d1a}
+.chat-msg{display:flex;max-width:85%;opacity:0;transition:opacity .3s ease,transform .3s ease}
+.chat-msg.appear{opacity:1}
+.user-msg{align-self:flex-end;flex-direction:row-reverse}
+.ai-msg{align-self:flex-start}
+.msg-bubble{display:flex;gap:9px;align-items:flex-start}
+.user-bubble{flex-direction:row-reverse}
+.ai-ic,.usr-ic{font-size:18px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.msg-content{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:12px 14px;max-width:100%}
+.user-bubble .msg-content{background:#3b82f6;border-color:#1d4ed8;border-radius:14px 4px 14px 14px}
+.ai-msg .msg-content{border-radius:4px 14px 14px 14px}
+.msg-txt{font-size:13px;line-height:1.7;color:#f8fafc;word-break:break-word}
+.msg-txt strong{color:#93c5fd}
+.msg-txt code{background:#1a2740;padding:1px 5px;border-radius:4px;font-size:11px;font-family:monospace}
+.msg-txt ul,.msg-txt ol{padding-left:18px;margin:4px 0}
+.msg-txt li{margin-bottom:3px}
+.msg-txt h4{color:#fbbf24;margin:7px 0 3px;font-size:12px}
+.msg-foot{display:flex;align-items:center;gap:7px;margin-top:7px}
+.msg-time{font-size:10px;color:#475569}
+.fallback-badge{font-size:10px;padding:2px 6px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:10px;color:#f59e0b}
+.msg-actions{display:flex;gap:3px;margin-left:auto}
+.msg-act-btn{background:none;border:none;font-size:11px;cursor:pointer;opacity:.5;transition:opacity .2s;padding:2px 4px}
+.msg-act-btn:hover{opacity:1}
+.typing-ind{padding:10px 18px;display:none;align-items:center;gap:9px}
+.typing-bubble{display:flex;gap:3px;padding:8px 12px;background:#111927;border:1px solid #1e3a5f;border-radius:14px}
+.typing-dot{width:7px;height:7px;background:#3b82f6;border-radius:50%;animation:typeBounce 1.2s ease infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+.typing-lbl{font-size:11px;color:#475569;font-style:italic}
+.chat-input-area{padding:14px;background:#0d1b2a;border-top:1px solid #1e3a5f}
+.input-wrap{display:flex;align-items:flex-end;gap:7px;background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:7px 7px 7px 12px;transition:border-color .15s ease}
+.input-wrap:focus-within{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.chat-inp{flex:1;background:none;border:none;color:#f8fafc;font-size:13px;font-family:'Inter',sans-serif;resize:none;outline:none;line-height:1.5;min-height:22px;max-height:100px;overflow-y:auto}
+.chat-inp::placeholder{color:#475569}
+.mic-btn{background:none;border:none;font-size:17px;cursor:pointer;padding:3px;transition:transform .15s ease}
+.mic-btn:hover{transform:scale(1.1)}
+.mic-btn.rec{animation:recPulse 1s ease infinite}
+.send-btn{background:#3b82f6;border:none;color:#fff;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;flex-shrink:0}
+.send-btn:hover{background:#1d4ed8;transform:scale(1.05)}
+.send-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5}
+.inp-foot{display:flex;justify-content:space-between;padding:5px 3px 0;font-size:10px;color:#475569}
+
+/* ======= CROWD ======= */
+.crowd-wrap{display:flex;flex-direction:column;gap:18px}
+.crowd-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.cstat{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .15s ease}
+.cstat:hover{border-color:#3b82f6}
+.cstat-icon{font-size:28px}
+.cstat-val{font-size:24px;font-weight:800;font-family:'Outfit',sans-serif;line-height:1}
+.cstat-lbl{font-size:12px;color:#94a3b8;margin-top:2px}
+.cstat-sub{font-size:11px;color:#475569;margin-top:2px}
+.crowd-main{display:grid;grid-template-columns:1fr 360px;gap:18px}
+.heatmap-panel,.crowd-right{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.crowd-right{display:flex;flex-direction:column;gap:14px}
+.hmap-container{background:#060d1a;border-radius:10px;overflow:hidden;border:1px solid #1e3a5f}
+#heatmap-canvas{width:100%;height:auto;display:block}
+.hmap-legend{display:flex;gap:14px;padding:9px 12px;background:#0d1b2a;border-top:1px solid #1e3a5f;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#94a3b8}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+.alerts-panel,.zones-panel{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:13px}
+.alerts-list{display:flex;flex-direction:column;gap:7px}
+.alert-item{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:9px;border:1px solid}
+.alert-critical{background:rgba(239,68,68,.07);border-color:rgba(239,68,68,.3)}
+.alert-warning{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.3)}
+.alert-info{background:rgba(59,130,246,.07);border-color:rgba(59,130,246,.3)}
+.alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.alert-txt{font-size:11px;color:#f8fafc;line-height:1.4;display:block}
+.alert-time{font-size:10px;color:#475569;display:block;margin-top:2px}
+.zones-list{display:flex;flex-direction:column;gap:7px}
+.zone-item{display:grid;grid-template-columns:115px 1fr 50px;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #1e3a5f}
+.zone-item:last-child{border-bottom:none}
+.zone-name{font-size:10px;color:#94a3b8}
+.zone-bar-wrap{height:5px;background:#1a2740;border-radius:3px;overflow:hidden}
+.zone-bar{height:100%;border-radius:3px;transition:width .8s ease}
+.zone-pct{font-size:11px;font-weight:700;text-align:right}
+.zone-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;text-align:right}
+.ai-insight-panel{background:#111927;border:1px solid rgba(139,92,246,.4);border-radius:14px;padding:18px;display:none}
+.insight-loading{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:13px}
+.spinner{width:18px;height:18px;border:2px solid #1e3a5f;border-top-color:#8b5cf6;border-radius:50%;animation:spin .8s linear infinite}
+.insight-result{display:flex;flex-direction:column;gap:12px}
+.insight-sev{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:20px;border:1px solid;font-size:11px;font-weight:600;align-self:flex-start}
+.insight-result h4{font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:5px}
+.insight-result p{font-size:12px;color:#94a3b8;line-height:1.6}
+.insight-result ul{padding-left:18px}
+.insight-result li{font-size:12px;color:#94a3b8;margin-bottom:3px}
+
+/* ======= NAVIGATION ======= */
+.nav-wrap{display:flex;flex-direction:column;gap:18px}
+.nav-search{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.search-wrap{display:flex;align-items:center;gap:9px;background:#060d1a;border:1px solid #1e3a5f;border-radius:10px;padding:9px 14px}
+.search-wrap:focus-within{border-color:#3b82f6}
+.search-inp{flex:1;background:none;border:none;color:#f8fafc;font-size:13px;outline:none;font-family:'Inter',sans-serif}
+.search-inp::placeholder{color:#475569}
+.svc-filters{display:flex;gap:7px;flex-wrap:wrap}
+.svc-btn{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;padding:5px 11px;border-radius:20px;font-size:11px;cursor:pointer;transition:all .15s ease;font-family:'Inter',sans-serif;white-space:nowrap}
+.svc-btn:hover,.svc-btn.active{background:rgba(59,130,246,.15);border-color:#3b82f6;color:#60a5fa}
+.nav-main{display:grid;grid-template-columns:1fr 350px;gap:18px}
+.map-panel,.nav-right{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.nav-right{display:flex;flex-direction:column;gap:14px}
+.map-container{background:#060d1a;border-radius:10px;overflow:hidden;border:1px solid #1e3a5f;cursor:pointer}
+.stadium-svg{width:100%;height:auto;display:block;transition:transform .3s ease;transform-origin:center}
+.map-ctrls{display:flex;gap:5px}
+.map-ctrl-btn{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;width:27px;height:27px;border-radius:6px;font-size:16px;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;transition:all .15s ease}
+.map-ctrl-btn:hover{border-color:#3b82f6;color:#3b82f6}
+.gates-panel,.sec-detail,.svcs-panel{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:13px}
+.gates-list{display:flex;flex-direction:column;gap:5px}
+.gate-item{display:flex;align-items:center;gap:9px;padding:7px 9px;background:#1a2740;border:1px solid #1e3a5f;border-radius:9px;cursor:pointer;transition:all .15s ease}
+.gate-item:hover{border-color:#3b82f6}
+.gate-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;animation:pulse 2s ease infinite}
+.gate-name{font-size:11px;font-weight:600;flex:1}
+.gate-svc{font-size:10px;color:#475569;margin-top:2px}
+.wait-t{font-size:15px;font-weight:800;font-family:'Outfit',sans-serif}
+.wait-l{font-size:9px;color:#475569;text-transform:uppercase}
+.sec-detail{display:none}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sec-badge{padding:3px 11px;border-radius:20px;border:1px solid;font-size:12px;font-weight:700}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-lbl{font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.5px}
+.meta-val{font-size:12px;font-weight:600}
+.sec-svcs h4{font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.sec-svcs ul{padding-left:15px}
+.sec-svcs li{font-size:11px;color:#94a3b8;margin-bottom:3px}
+.sec-dir p{font-size:11px;color:#94a3b8;line-height:1.5;margin-bottom:8px}
+.sec-dir h4{font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.btn-navigate{width:100%;padding:9px;font-size:12px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#7c3aed);color:#fff;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-navigate:hover{opacity:.9}
+.dir-panel{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px;display:none;margin-top:4px}
+.dir-steps{display:flex;flex-direction:column;gap:8px}
+.dir-step{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#1a2740;border-radius:9px;font-size:12px;color:#94a3b8}
+.dir-step.success{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.25);color:#10b981;font-weight:600}
+.step-num{width:22px;height:22px;background:#3b82f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* ======= TRANSPORT ======= */
+.trans-wrap{display:flex;flex-direction:column;gap:18px}
+.trans-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.tstat{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:16px;display:flex;align-items:center;gap:12px;transition:all .15s ease}
+.tstat:hover{border-color:#3b82f6}
+.tstat-icon{font-size:28px}
+.tstat-val{font-size:21px;font-weight:800;font-family:'Outfit',sans-serif}
+.tstat-lbl{font-size:11px;color:#475569}
+.trans-main{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.trans-panel{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.shuttle-list{display:flex;flex-direction:column;gap:9px}
+.shuttle-item{display:flex;align-items:center;gap:11px;padding:11px;background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;transition:all .15s ease}
+.shuttle-item:hover{border-color:#3b82f6}
+.sh-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.sh-info{flex:1}
+.sh-name{font-size:12px;font-weight:600}
+.sh-stops{font-size:10px;color:#475569;margin-top:2px}
+.sh-freq{font-size:10px;color:#475569;margin-top:1px}
+.sh-status{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.sh-next{display:flex;flex-direction:column;align-items:flex-end}
+.next-bus{font-size:18px;font-weight:800;font-family:'Outfit',sans-serif;line-height:1}
+.next-bus-lbl{font-size:9px;color:#475569;text-transform:uppercase}
+.cap-bar-wrap{width:90px;height:4px;background:#1a2740;border-radius:2px;overflow:hidden}
+.cap-bar{height:100%;border-radius:2px;transition:width .5s ease}
+.sh-cap-txt{font-size:9px}
+.metro-list{display:flex;flex-direction:column;gap:9px}
+.metro-item{display:flex;align-items:center;gap:11px;padding:11px;background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px}
+.metro-ind{width:4px;height:38px;border-radius:2px;flex-shrink:0}
+.metro-info{flex:1}
+.metro-nm{font-size:12px;font-weight:600}
+.metro-dir{font-size:11px;color:#94a3b8;margin-top:2px}
+.metro-plat{font-size:10px;color:#475569;margin-top:2px}
+.next-t{font-size:18px;font-weight:800;font-family:'Outfit',sans-serif;display:block;line-height:1}
+.next-lbl{font-size:9px;color:#475569;text-transform:uppercase}
+.rs-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.rs-item{display:flex;align-items:center;gap:9px;padding:9px 11px;background:#0d1b2a;border:1px solid #1e3a5f;border-radius:9px}
+.rs-logo{font-size:18px}
+.rs-info{flex:1}
+.rs-name{font-size:12px;font-weight:600;display:block}
+.rs-zone{font-size:10px;color:#475569}
+.rs-wait{font-size:13px;font-weight:700}
+.parking-section{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.parking-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin-top:4px}
+.park-card{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:7px;transition:all .15s ease}
+.park-card:hover{border-color:#f59e0b}
+.park-hdr{display:flex;justify-content:space-between;align-items:flex-start}
+.park-name{font-size:11px;font-weight:700}
+.park-price{font-size:10px;color:#f59e0b;font-weight:600}
+.park-meter{height:5px;background:#1a2740;border-radius:3px;overflow:hidden}
+.meter-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.park-avail{font-size:12px;font-weight:700}
+.park-status{font-size:9px;font-weight:600;text-transform:uppercase}
+.park-meta{font-size:10px;color:#475569}
+.park-full-note{font-size:10px;color:#f59e0b;background:rgba(245,158,11,.08);padding:3px 7px;border-radius:4px;text-align:center}
+.planner-section{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.planner-form{display:flex;flex-direction:column;gap:14px}
+.plan-inputs{display:flex;align-items:flex-end;gap:14px}
+.plan-grp{flex:1;display:flex;flex-direction:column;gap:5px}
+.plan-grp label{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px}
+.plan-inp{background:#060d1a;border:1px solid #1e3a5f;color:#f8fafc;border-radius:9px;padding:9px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s ease;width:100%}
+.plan-inp:focus{border-color:#3b82f6}
+.plan-inp[readonly]{color:#94a3b8}
+.plan-arrow{font-size:18px;color:#475569;margin-bottom:9px;flex-shrink:0}
+.plan-opts{display:flex;gap:14px;flex-wrap:wrap}
+.plan-opts label{display:flex;align-items:center;gap:6px;font-size:13px;color:#94a3b8;cursor:pointer}
+.plan-opts input{accent-color:#3b82f6}
+.journey-result{margin-top:4px;display:none}
+.journey-plan{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;animation:fadeIn .3s ease}
+.j-summary{display:flex;gap:18px;font-size:13px;font-weight:700}
+.j-steps{padding-left:18px;display:flex;flex-direction:column;gap:7px}
+.j-steps li{font-size:12px;color:#94a3b8}
+.j-note{font-size:11px;color:#f59e0b;padding:7px 11px;background:rgba(245,158,11,.07);border-radius:9px}
+
+/* ======= ACCESSIBILITY ======= */
+.access-wrap{display:flex;flex-direction:column;gap:20px}
+.access-toolbar{display:flex;gap:7px;flex-wrap:wrap;background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:13px 14px}
+.acc-tool-btn{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;padding:7px 14px;border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s ease;font-family:'Inter',sans-serif}
+.acc-tool-btn:hover{border-color:#3b82f6;color:#3b82f6}
+.acc-tool-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.access-section{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.avail-badge{padding:3px 11px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:20px;font-size:11px;font-weight:600;color:#10b981}
+.acc-features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.acc-feat-card{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:9px;transition:all .15s ease;cursor:default}
+.acc-feat-card:hover{border-color:#10b981;transform:translateY(-2px)}
+.feat-icon-wrap{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+.feat-icon{font-size:20px}
+.feat-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.feat-desc{font-size:11px;color:#94a3b8;line-height:1.5}
+.feat-locs{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.loc-tag{font-size:9px;padding:2px 7px;background:#1a2740;border:1px solid #1e3a5f;border-radius:10px;color:#475569}
+.feat-status{display:flex;align-items:center;gap:5px;margin-top:auto}
+.status-dot-available{width:7px;height:7px;border-radius:50%;background:#10b981;animation:pulse 2s ease infinite}
+.status-txt{font-size:10px;color:#10b981;font-weight:600}
+.routes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.route-card{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:13px;display:flex;flex-direction:column;gap:9px}
+.route-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:7px}
+.route-from{font-size:11px;color:#94a3b8}
+.route-to{font-size:11px;font-weight:600}
+.route-time{font-size:11px;color:#f59e0b;font-weight:600;white-space:nowrap}
+.route-steps-list{list-style:none;display:flex;flex-direction:column;gap:5px;counter-reset:sc}
+.route-steps-list li{font-size:10px;color:#94a3b8;padding-left:16px;position:relative;line-height:1.5;counter-increment:sc}
+.route-steps-list li::before{content:counter(sc);position:absolute;left:0;top:0;width:13px;height:13px;background:#3b82f6;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.btn-speak-route{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;padding:5px 11px;border-radius:9px;font-size:10px;cursor:pointer;font-family:'Inter',sans-serif;margin-top:auto;transition:all .15s ease}
+.btn-speak-route:hover{border-color:#3b82f6;color:#3b82f6}
+.assist-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:12px}
+.assist-btn{background:#0d1b2a;border:1px solid #1e3a5f;color:#f8fafc;padding:13px 11px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s ease;font-family:'Inter',sans-serif;text-align:center;line-height:1.4}
+.assist-btn:hover{border-color:#3b82f6;background:rgba(59,130,246,.07)}
+.assist-btn.emrg{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.07);color:#ef4444}
+.assist-btn.emrg:hover{background:rgba(239,68,68,.12);box-shadow:0 0 10px rgba(239,68,68,.2)}
+.assist-note{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:10px;padding:11px 13px;font-size:11px;color:#94a3b8;line-height:1.5}
+.access-contact{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:14px 18px}
+.access-contact h4{font-size:13px;font-weight:700;margin-bottom:9px}
+.contact-info{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#94a3b8}
+.contact-info strong{color:#60a5fa}
+
+/* ======= SUSTAINABILITY ======= */
+.eco-wrap{display:flex;flex-direction:column;gap:20px}
+.eco-hero{background:linear-gradient(135deg,#0d2112 0%,#0a1f2a 50%,#0d1a2a 100%);border:1px solid rgba(16,185,129,.3);border-radius:16px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:20px;position:relative;overflow:hidden}
+.eco-hero::before{content:'🌍';position:absolute;right:210px;top:50%;transform:translateY(-50%);font-size:70px;opacity:.08}
+.eco-title{font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;line-height:1.3}
+.eco-sub{font-size:13px;color:#10b981;margin-top:6px}
+.eco-metrics{display:flex;gap:22px;flex-shrink:0}
+.hero-metric{text-align:center}
+.hero-m-val{font-size:32px;font-weight:900;font-family:'Outfit',sans-serif;color:#10b981;display:block;line-height:1}
+.hero-m-unit{font-size:11px;color:#94a3b8;display:block;margin-top:3px}
+.hero-m-lbl{font-size:10px;color:#475569;display:block;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.eco-init-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.eco-init-card{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px;display:flex;gap:13px;transition:all .15s ease}
+.eco-init-card:hover{border-color:#f59e0b;transform:translateY(-2px)}
+.init-icon-wrap{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.init-icon{font-size:22px}
+.init-title{font-size:12px;font-weight:700;margin-bottom:3px}
+.init-val{font-size:18px;font-weight:800;font-family:'Outfit',sans-serif;display:block;margin-bottom:5px}
+.init-desc{font-size:11px;color:#475569;line-height:1.5;margin-bottom:9px}
+.init-prog-bar{height:5px;background:#1a2740;border-radius:3px;overflow:hidden;margin-bottom:3px}
+.init-prog-fill{height:100%;border-radius:3px;transition:width 1s ease}
+.init-prog-txt{font-size:9px;color:#475569}
+.eco-energy{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:18px}
+.energy-chart-wrap{display:flex;align-items:center;gap:28px;margin-bottom:14px}
+.energy-legend{display:flex;flex-direction:column;gap:7px}
+.e-leg-item{display:flex;align-items:center;gap:9px;font-size:12px;color:#94a3b8}
+.e-leg-color{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.e-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px;padding-top:14px;border-top:1px solid #1e3a5f}
+.e-stat{text-align:center}
+.e-val{font-size:18px;font-weight:800;font-family:'Outfit',sans-serif;color:#10b981;display:block}
+.e-lbl{font-size:10px;color:#475569;display:block;margin-top:2px}
+.eco-tips{background:linear-gradient(135deg,rgba(16,185,129,.07),rgba(59,130,246,.07));border:1px solid rgba(16,185,129,.2);border-radius:14px;padding:18px}
+.tip-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#10b981;display:block;margin-bottom:5px}
+.tip-txt{font-size:13px;color:#94a3b8;line-height:1.6;transition:opacity .2s ease}
+.tip-ctrls{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:12px}
+.tip-nav{background:none;border:1px solid #1e3a5f;color:#94a3b8;width:27px;height:27px;border-radius:50%;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease}
+.tip-nav:hover{border-color:#10b981;color:#10b981}
+.tip-dots{display:flex;gap:5px}
+.tip-dot{width:5px;height:5px;border-radius:50%;background:#1e3a5f;cursor:pointer;transition:background .15s ease}
+.tip-dot.active{background:#10b981}
+.eco-pledge{background:#111927;border:1px solid #1e3a5f;border-radius:14px;padding:22px}
+.eco-pledge h3{font-size:16px;font-weight:700;margin-bottom:7px}
+.eco-pledge>p{font-size:13px;color:#94a3b8;margin-bottom:14px}
+.pledge-opts{display:flex;flex-direction:column;gap:9px;margin-bottom:14px}
+.pledge-check{display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer;transition:color .15s ease}
+.pledge-check:hover{color:#10b981}
+.pledge-check input{accent-color:#10b981;width:15px;height:15px}
+.btn-pledge{background:linear-gradient(135deg,#059669,#10b981);border:none;padding:11px 26px;font-size:13px;font-weight:700;color:#fff;border-radius:9px;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:7px;transition:all .15s ease}
+.btn-pledge:hover{box-shadow:0 0 18px rgba(16,185,129,.4)}
+.pledge-success{display:flex;align-items:center;gap:14px;padding:14px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.25);border-radius:10px;margin-top:11px;animation:fadeIn .3s ease}
+.pledge-success-icon{font-size:28px}
+.pledge-success strong{display:block;font-size:13px;color:#10b981;margin-bottom:3px}
+.pledge-success p{font-size:11px;color:#94a3b8}
+
+/* ======= SETTINGS MODAL ======= */
+.settings-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.settings-overlay.open{display:flex}
+.settings-modal{background:#0d1b2a;border:1px solid #1e3a5f;border-radius:16px;padding:26px;width:460px;max-width:95vw;animation:fadeIn .3s ease}
+.settings-modal h2{font-size:18px;font-weight:700;margin-bottom:18px}
+.set-grp{margin-bottom:18px}
+.set-lbl{display:block;font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.set-inp{width:100%;background:#060d1a;border:1px solid #1e3a5f;color:#f8fafc;border-radius:9px;padding:11px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s ease}
+.set-inp:focus{border-color:#3b82f6}
+.set-note{font-size:10px;color:#475569;margin-top:5px;display:block}
+.set-note a{color:#60a5fa;text-decoration:none}
+.set-check-lbl{display:flex;align-items:center;gap:9px;font-size:13px;cursor:pointer}
+.set-check-lbl input{accent-color:#3b82f6;width:15px;height:15px}
+.set-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:20px}
+.btn-sec{background:#1a2740;color:#f8fafc;border:1px solid #1e3a5f;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s ease}
+.btn-sec:hover{border-color:#3b82f6;color:#3b82f6}
+.btn-prim{background:linear-gradient(135deg,#1d4ed8,#7c3aed);color:#fff;border:none;padding:10px 22px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:7px;transition:all .15s ease}
+.btn-prim:hover{opacity:.9;transform:translateY(-1px)}
+
+/* ======= COMMON COMPONENTS ======= */
+.alert-callout{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:9px;padding:9px 11px;font-size:11px;color:#f59e0b;margin-top:8px}
+.acc-note{margin-top:11px;background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:9px;padding:9px 12px;font-size:11px;color:#10b981}
+.refresh-btn{background:#1a2740;border:1px solid #1e3a5f;color:#94a3b8;padding:5px 11px;border-radius:9px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s ease}
+.refresh-btn:hover{border-color:#3b82f6;color:#3b82f6}
+.icon-btn{background:none;border:1px solid #1e3a5f;color:#94a3b8;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;font-size:12px;flex-shrink:0}
+.icon-btn:hover{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.08)}
+.ai-analyze-btn{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(59,130,246,.18));border:1px solid rgba(139,92,246,.4);color:#a78bfa;padding:5px 13px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s ease}
+.ai-analyze-btn:hover{box-shadow:0 0 14px rgba(139,92,246,.25)}
+.upd-time{font-size:10px;color:#475569}
+
+/* ======= HIGH CONTRAST ======= */
+.high-contrast{--bg:#000;--bg2:#0a0a0a;--bg3:#111;--txt:#fff;--txt2:#ddd;--brd:#444}
+.high-contrast body{background:var(--bg)}
+.high-contrast .sidebar,.high-contrast .top-header{background:var(--bg2)}
+.high-contrast .panel,.high-contrast .kpi-card{background:var(--bg3);border-color:var(--brd)}
+
+/* ======= SIDEBAR OVERLAY (mobile) ======= */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+
+/* ======= ANIMATIONS ======= */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+@keyframes typeBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes recPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes liveGlow{0%,100%{box-shadow:0 0 5px rgba(239,68,68,.25)}50%{box-shadow:0 0 10px rgba(239,68,68,.45)}}
+*:focus-visible{outline:2px solid #3b82f6;outline-offset:2px;border-radius:4px}
+
+/* ======= RESPONSIVE ======= */
+@media(max-width:1200px){
+  .kpi-grid,.crowd-stats,.trans-stats{grid-template-columns:repeat(2,1fr)}
+  .crowd-main,.nav-main,.trans-main{grid-template-columns:1fr}
+  .acc-features,.eco-init-grid{grid-template-columns:repeat(2,1fr)}
+  .routes-grid{grid-template-columns:1fr 1fr}
+  .parking-grid{grid-template-columns:repeat(3,1fr)}
+  .venues-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .main-content{margin-left:0}
+  .ham-btn{display:flex}
+  .sidebar-overlay.open{display:block}
+  .page-content{padding:14px}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .eco-hero{flex-direction:column;text-align:center}
+  .eco-metrics{justify-content:center}
+  .acc-features{grid-template-columns:1fr}
+  .eco-init-grid{grid-template-columns:1fr}
+  .assist-grid{grid-template-columns:repeat(2,1fr)}
+  .parking-grid{grid-template-columns:repeat(2,1fr)}
+  .routes-grid{grid-template-columns:1fr}
+  .dash-grid-2{grid-template-columns:1fr}
+  .plan-inputs{flex-direction:column}
+  .header-match{display:none}
+}
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr}
+  .crowd-stats,.trans-stats{grid-template-columns:1fr 1fr}
+}
+</style>
 </head>
-
 <body>
-  <!-- Skip to main content for accessibility -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="app">
 
-  <div id="app" role="application" aria-label="StadiumIQ FIFA World Cup 2026 Platform">
-
-    <!-- ============================================================
-         SIDEBAR NAVIGATION
-         ============================================================ -->
-    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
-
-      <!-- Logo -->
-      <div class="sidebar-logo">
-        <div class="logo-icon" aria-hidden="true">⚽</div>
-        <div class="logo-text">
-          <span class="logo-title">StadiumIQ</span>
-          <span class="logo-subtitle">FIFA World Cup 2026</span>
-        </div>
-      </div>
-
-      <!-- Persona Switcher -->
-      <div class="persona-switcher" role="group" aria-label="Select your role">
-        <span class="persona-label">Your Role</span>
-        <div class="persona-grid">
-          <button class="persona-btn active" data-persona="fan" id="persona-fan" aria-pressed="true">⚽ Fan</button>
-          <button class="persona-btn" data-persona="organizer" id="persona-organizer" aria-pressed="false">📋 Organizer</button>
-          <button class="persona-btn" data-persona="volunteer" id="persona-volunteer" aria-pressed="false">🙋 Volunteer</button>
-          <button class="persona-btn" data-persona="staff" id="persona-staff" aria-pressed="false">🔧 Staff</button>
-        </div>
-      </div>
-
-      <!-- Navigation Menu -->
-      <nav class="nav-menu" aria-label="Page navigation">
-        <span class="nav-section-label">Main</span>
-        <button class="nav-item active" data-page="dashboard" id="nav-dashboard" aria-current="page">
-          <span class="nav-icon" aria-hidden="true">📊</span>
-          Dashboard
-        </button>
-        <button class="nav-item" data-page="chat" id="nav-chat">
-          <span class="nav-icon" aria-hidden="true">🤖</span>
-          AI Assistant
-          <span class="nav-badge" aria-label="AI online">AI</span>
-        </button>
-
-        <span class="nav-section-label">Operations</span>
-        <button class="nav-item" data-page="crowd" id="nav-crowd">
-          <span class="nav-icon" aria-hidden="true">👥</span>
-          Crowd Mgmt
-        </button>
-        <button class="nav-item" data-page="navigation" id="nav-navigation">
-          <span class="nav-icon" aria-hidden="true">🗺️</span>
-          Navigation
-        </button>
-        <button class="nav-item" data-page="transport" id="nav-transport">
-          <span class="nav-icon" aria-hidden="true">🚌</span>
-          Transport
-        </button>
-
-        <span class="nav-section-label">Support</span>
-        <button class="nav-item" data-page="accessibility" id="nav-accessibility">
-          <span class="nav-icon" aria-hidden="true">♿</span>
-          Accessibility
-        </button>
-        <button class="nav-item" data-page="sustainability" id="nav-sustainability">
-          <span class="nav-icon" aria-hidden="true">🌍</span>
-          Eco Tracker
-        </button>
-      </nav>
-
-      <!-- Language & Settings -->
-      <div class="sidebar-footer">
-        <select class="lang-selector" id="lang-selector" aria-label="Select language">
-          <option value="en">🇺🇸 English</option>
-          <option value="es">🇪🇸 Español</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="ar">🇸🇦 العربية</option>
-          <option value="pt">🇧🇷 Português</option>
-          <option value="de">🇩🇪 Deutsch</option>
-          <option value="zh">🇨🇳 中文</option>
-          <option value="ja">🇯🇵 日本語</option>
-          <option value="hi">🇮🇳 हिंदी</option>
-          <option value="ko">🇰🇷 한국어</option>
-        </select>
-        <button class="settings-btn" id="settings-btn" aria-label="Open settings">
-          ⚙️ Settings &amp; API Key
-        </button>
-      </div>
-    </aside>
-
-    <!-- ============================================================
-         MAIN CONTENT AREA
-         ============================================================ -->
-    <main class="main-content" id="main-content" role="main">
-
-      <!-- Top Header -->
-      <header class="top-header" role="banner">
-        <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
-        <div class="header-breadcrumb" aria-label="Current location">
-          <span class="breadcrumb-root">StadiumIQ</span>
-          <span class="breadcrumb-sep" aria-hidden="true">›</span>
-          <span class="breadcrumb-current" id="breadcrumb-current">Dashboard</span>
-        </div>
-        <div class="header-live-indicator" role="status" aria-live="polite">
-          <span class="live-dot" aria-hidden="true"></span>
-          <span class="live-text">LIVE</span>
-        </div>
-        <div class="header-match-info" aria-label="Current match information">
-          <span>⚽</span>
-          <span id="match-info-text">USA vs MEX · Kickoff 20:00</span>
-        </div>
-        <div class="header-time" id="header-time" aria-live="off" aria-label="Current time"></div>
-      </header>
-
-      <!-- Page Sections -->
-      <div class="page-content">
-
-        <!-- ===================== DASHBOARD ===================== -->
-        <section class="page-section active" id="page-dashboard" aria-labelledby="dashboard-heading">
-          <h1 id="dashboard-heading" class="visually-hidden">Dashboard — FIFA World Cup 2026 Operations</h1>
-
-          <!-- KPI Row -->
-          <div class="dashboard-grid" role="list" aria-label="Key performance indicators">
-            <article class="kpi-card" role="listitem" tabindex="0" aria-label="Stadium occupancy: 64,300 fans">
-              <span class="kpi-icon" aria-hidden="true">👥</span>
-              <div class="kpi-value" id="kpi-fans">64,300</div>
-              <div class="kpi-label">Stadium Occupancy</div>
-              <div class="kpi-trend up" aria-label="Trending up 12 percent from yesterday">↑ +12% vs yesterday</div>
-            </article>
-            <article class="kpi-card" role="listitem" tabindex="0" aria-label="Active alerts: 3">
-              <span class="kpi-icon" aria-hidden="true">🚨</span>
-              <div class="kpi-value" id="kpi-alerts" style="color:#ef4444">3</div>
-              <div class="kpi-label">Active Alerts</div>
-              <div class="kpi-trend down" aria-label="1 critical">↑ 1 critical</div>
-            </article>
-            <article class="kpi-card" role="listitem" tabindex="0" aria-label="Next shuttle: 6 minutes">
-              <span class="kpi-icon" aria-hidden="true">🚌</span>
-              <div class="kpi-value" id="kpi-shuttle">6 min</div>
-              <div class="kpi-label">Next Shuttle</div>
-              <div class="kpi-trend neutral">Express Route</div>
-            </article>
-            <article class="kpi-card" role="listitem" tabindex="0" aria-label="CO2 saved today: 142 tonnes">
-              <span class="kpi-icon" aria-hidden="true">🌍</span>
-              <div class="kpi-value" id="kpi-eco" style="color:#10b981">142t</div>
-              <div class="kpi-label">CO₂ Saved Today</div>
-              <div class="kpi-trend up">↑ Renewable energy</div>
-            </article>
-          </div>
-
-          <!-- Secondary Panels -->
-          <div class="dashboard-secondary">
-            <!-- Crowd Overview -->
-            <div class="dashboard-panel">
-              <div class="panel-header">
-                <h2 style="font-size:15px;font-weight:700">👥 Crowd Overview</h2>
-                <span class="live-badge">LIVE</span>
-              </div>
-              <div id="dash-crowd-mini"></div>
-            </div>
-
-            <!-- AI Insight Card -->
-            <div class="dashboard-panel" style="background: linear-gradient(135deg, #0d1b2a, #1a2740); border-color: rgba(139,92,246,0.3);">
-              <div class="panel-header">
-                <h2 style="font-size:15px;font-weight:700">🤖 AI Operational Summary</h2>
-              </div>
-              <div id="dash-ai-insight">
-                <div style="display:flex;flex-direction:column;gap:10px">
-                  <div style="padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:8px;font-size:12px;">
-                    🚨 <strong>Gate 5 at 89% capacity</strong> — redirect signage activated
-                  </div>
-                  <div style="padding:12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);border-radius:8px;font-size:12px;">
-                    ⚠️ <strong>Concession bottleneck</strong> — recommend opening Section D stand
-                  </div>
-                  <div style="padding:12px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);border-radius:8px;font-size:12px;">
-                    ✅ <strong>All accessibility services</strong> operational — 0 pending requests
-                  </div>
-                  <div style="padding:12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);border-radius:8px;font-size:12px;">
-                    ℹ️ <strong>Solar output: 8.4 MWh</strong> — 65% of energy from renewable sources
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Match Schedule -->
-          <section class="matches-section" aria-labelledby="matches-heading">
-            <div class="panel-header">
-              <h2 id="matches-heading" style="font-size:15px;font-weight:700">⚽ FIFA World Cup 2026 — Upcoming Matches</h2>
-              <span style="font-size:12px;color:var(--text-muted)">MetLife Stadium & more</span>
-            </div>
-            <div id="matches-container">
-              <!-- Matches rendered by JS -->
-            </div>
-          </section>
-
-          <!-- Venues Overview -->
-          <section aria-labelledby="venues-heading" style="margin-top:24px">
-            <div class="panel-header">
-              <h2 id="venues-heading" style="font-size:15px;font-weight:700">🏟️ Host Venues</h2>
-            </div>
-            <div id="venues-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px"></div>
-          </section>
-        </section>
-
-        <!-- ===================== AI CHAT ===================== -->
-        <section class="page-section" id="page-chat" aria-labelledby="chat-heading">
-          <h1 id="chat-heading" class="visually-hidden">AI Chat Assistant</h1>
-          <div id="chat-container"></div>
-        </section>
-
-        <!-- ===================== CROWD MANAGEMENT ===================== -->
-        <section class="page-section" id="page-crowd" aria-labelledby="crowd-heading">
-          <h1 id="crowd-heading" class="visually-hidden">Crowd Management Dashboard</h1>
-          <div id="crowd-container"></div>
-        </section>
-
-        <!-- ===================== NAVIGATION ===================== -->
-        <section class="page-section" id="page-navigation" aria-labelledby="nav-heading">
-          <h1 id="nav-heading" class="visually-hidden">Stadium Navigation</h1>
-          <div id="navigation-container"></div>
-        </section>
-
-        <!-- ===================== TRANSPORT ===================== -->
-        <section class="page-section" id="page-transport" aria-labelledby="transport-heading">
-          <h1 id="transport-heading" class="visually-hidden">Transportation Hub</h1>
-          <div id="transport-container"></div>
-        </section>
-
-        <!-- ===================== ACCESSIBILITY ===================== -->
-        <section class="page-section" id="page-accessibility" aria-labelledby="access-heading">
-          <h1 id="access-heading" class="visually-hidden">Accessibility Companion</h1>
-          <div id="accessibility-container"></div>
-        </section>
-
-        <!-- ===================== SUSTAINABILITY ===================== -->
-        <section class="page-section" id="page-sustainability" aria-labelledby="eco-heading">
-          <h1 id="eco-heading" class="visually-hidden">Sustainability & Eco Tracker</h1>
-          <div id="sustainability-container"></div>
-        </section>
-
-      </div>
-    </main>
-  </div>
-
-  <!-- ============================================================
-       SETTINGS MODAL
-       ============================================================ -->
-  <div class="settings-overlay" id="settings-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-    <div class="settings-modal">
-      <h2 id="settings-title">⚙️ Settings</h2>
-
-      <div class="settings-group">
-        <label class="settings-label" for="api-key-input">🔑 Google Gemini API Key</label>
-        <input
-          type="password"
-          id="api-key-input"
-          class="settings-input"
-          placeholder="AIza..."
-          aria-describedby="api-key-help"
-          autocomplete="off"
-        />
-        <span id="api-key-help" class="settings-input-note">
-          Get a free API key at <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:var(--primary-light)">makersuite.google.com</a>. 
-          Your key is stored locally and never sent to our servers.
-        </span>
-      </div>
-
-      <div class="settings-group">
-        <label class="settings-label" for="settings-lang">🌐 Display Language</label>
-        <select id="settings-lang" class="settings-input" aria-label="Select display language">
-          <option value="en">🇺🇸 English</option>
-          <option value="es">🇪🇸 Español</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="ar">🇸🇦 العربية</option>
-          <option value="pt">🇧🇷 Português</option>
-          <option value="de">🇩🇪 Deutsch</option>
-          <option value="zh">🇨🇳 中文</option>
-          <option value="ja">🇯🇵 日本語</option>
-          <option value="hi">🇮🇳 हिंदी</option>
-          <option value="ko">🇰🇷 한국어</option>
-        </select>
-      </div>
-
-      <div class="settings-group">
-        <label class="settings-label" for="settings-persona">👤 Default Persona</label>
-        <select id="settings-persona" class="settings-input" aria-label="Select default persona">
-          <option value="fan">⚽ Fan</option>
-          <option value="organizer">📋 Organizer</option>
-          <option value="volunteer">🙋 Volunteer</option>
-          <option value="staff">🔧 Staff</option>
-        </select>
-      </div>
-
-      <div class="settings-group">
-        <label class="settings-label" style="display:flex;align-items:center;gap:10px;cursor:pointer">
-          <input type="checkbox" id="settings-speak" style="accent-color:var(--primary);width:16px;height:16px" />
-          🔊 Auto-speak AI responses
-        </label>
-      </div>
-
-      <div class="settings-actions">
-        <button class="btn-secondary" id="settings-cancel">Cancel</button>
-        <button class="btn-primary" id="settings-save">💾 Save Settings</button>
-      </div>
+<!-- ===== SIDEBAR ===== -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">⚽</div>
+    <div>
+      <div class="logo-title">StadiumIQ</div>
+      <div class="logo-sub">FIFA World Cup 2026</div>
     </div>
   </div>
+  <div class="persona-section">
+    <span class="persona-label">Your Role</span>
+    <div class="persona-grid">
+      <button class="persona-btn active" data-persona="fan">⚽ Fan</button>
+      <button class="persona-btn" data-persona="organizer">📋 Organizer</button>
+      <button class="persona-btn" data-persona="volunteer">🙋 Volunteer</button>
+      <button class="persona-btn" data-persona="staff">🔧 Staff</button>
+    </div>
+  </div>
+  <nav class="nav-menu">
+    <span class="nav-sec-label">Main</span>
+    <button class="nav-item active" data-page="dashboard"><span class="nav-icon">📊</span>Dashboard</button>
+    <button class="nav-item" data-page="chat"><span class="nav-icon">🤖</span>AI Assistant<span class="nav-badge">AI</span></button>
+    <span class="nav-sec-label">Operations</span>
+    <button class="nav-item" data-page="crowd"><span class="nav-icon">👥</span>Crowd Mgmt</button>
+    <button class="nav-item" data-page="navigation"><span class="nav-icon">🗺️</span>Navigation</button>
+    <button class="nav-item" data-page="transport"><span class="nav-icon">🚌</span>Transport</button>
+    <span class="nav-sec-label">Support</span>
+    <button class="nav-item" data-page="accessibility"><span class="nav-icon">♿</span>Accessibility</button>
+    <button class="nav-item" data-page="sustainability"><span class="nav-icon">🌍</span>Eco Tracker</button>
+  </nav>
+  <div class="sidebar-foot">
+    <select class="lang-sel" id="lang-sel">
+      <option value="en">🇺🇸 English</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="ar">🇸🇦 العربية</option>
+      <option value="pt">🇧🇷 Português</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="zh">🇨🇳 中文</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="hi">🇮🇳 हिंदी</option>
+      <option value="ko">🇰🇷 한국어</option>
+    </select>
+    <button class="settings-btn" id="settings-btn">⚙️ Settings &amp; API Key</button>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-  <!-- Sidebar overlay for mobile -->
-  <div class="sidebar-overlay" id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99;" aria-hidden="true"></div>
+<!-- ===== MAIN ===== -->
+<main class="main-content">
+  <header class="top-header">
+    <button class="ham-btn" id="ham-btn">☰</button>
+    <span class="breadcrumb-root">StadiumIQ</span>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-cur" id="breadcrumb">Dashboard</span>
+    <div class="live-indicator"><span class="live-dot"></span><span class="live-txt">LIVE</span></div>
+    <div class="header-match">⚽ USA vs MEX · Kickoff 20:00</div>
+    <div class="header-time" id="htime"></div>
+  </header>
 
-  <!-- Visually hidden class for screen readers -->
-  <style>
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    .skip-link {
-      position: absolute;
-      top: -100px;
-      left: 0;
-      background: var(--primary);
-      color: white;
-      padding: 8px 16px;
-      z-index: 9999;
-      border-radius: 0 0 8px 0;
-      font-family: 'Inter', sans-serif;
-    }
-    .skip-link:focus { top: 0; }
-  </style>
+  <div class="page-content">
 
-  <!-- ============================================================
-       MAIN APPLICATION SCRIPT
-       ============================================================ -->
-  <script type="module">
-    import GeminiAPI from './utils/gemini.js';
-    import i18n from './utils/i18n.js';
-    import { storage, showToast, formatTime, MATCH_SCHEDULE, VENUES, animateCount, formatNumber, randomInRange } from './utils/helpers.js';
-    import ChatComponent from './components/chat.js';
-    import CrowdComponent from './components/crowd.js';
-    import NavigationComponent from './components/navigation.js';
-    import AccessibilityComponent from './components/accessibility.js';
-    import TransportComponent from './components/transport.js';
-    import SustainabilityComponent from './components/sustainability.js';
-
-    // ============ App State ============
-    let currentPage = 'dashboard';
-    let currentPersona = 'fan';
-    let initializedComponents = {};
-
-    // ============ Initialize ============
-    function init() {
-      // Load saved settings
-      const savedKey = storage.get('stadiumiq_api_key', '');
-      const savedLang = storage.get('stadiumiq_lang', 'en');
-      const savedPersona = storage.get('stadiumiq_persona', 'fan');
-      const savedSpeak = storage.get('stadiumiq_speak', false);
-
-      // Apply saved settings
-      if (savedKey) {
-        GeminiAPI.init(savedKey, savedPersona, savedLang);
-        document.getElementById('api-key-input').value = savedKey;
-      }
-
-      i18n.setLanguage(savedLang);
-      document.getElementById('lang-selector').value = savedLang;
-      document.getElementById('settings-lang').value = savedLang;
-
-      currentPersona = savedPersona;
-      window.currentPersona = currentPersona;
-      updatePersonaUI(savedPersona);
-
-      document.getElementById('settings-persona').value = savedPersona;
-      document.getElementById('settings-speak').checked = savedSpeak;
-
-      // Start clock
-      updateClock();
-      setInterval(updateClock, 1000);
-
-      // Render dashboard content
-      renderDashboard();
-
-      // Bind navigation
-      bindNavigation();
-      bindPersonaSwitcher();
-      bindSettings();
-      bindMobile();
-
-      // Initialize chat immediately (it's likely the first thing users use)
-      initComponent('chat');
-    }
-
-    // ============ Clock ============
-    function updateClock() {
-      const el = document.getElementById('header-time');
-      if (el) el.textContent = formatTime();
-    }
-
-    // ============ Dashboard Rendering ============
-    function renderDashboard() {
-      renderMatches();
-      renderVenues();
-      renderCrowdMini();
-      startDashboardUpdates();
-    }
-
-    function renderMatches() {
-      const container = document.getElementById('matches-container');
-      if (!container) return;
-
-      const teamFlags = {
-        'USA': '🇺🇸', 'Mexico': '🇲🇽', 'Brazil': '🇧🇷', 'Germany': '🇩🇪',
-        'France': '🇫🇷', 'Argentina': '🇦🇷', 'Spain': '🇪🇸', 'Portugal': '🇵🇹',
-        'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'Japan': '🇯🇵', 'Italy': '🇮🇹', 'Netherlands': '🇳🇱',
-        'MEX': '🇲🇽'
-      };
-
-      container.innerHTML = MATCH_SCHEDULE.map(match => `
-        <article class="match-card" tabindex="0" aria-label="${match.home} vs ${match.away} at ${match.venue}">
-          <div class="match-teams">
-            <span class="team-flag" aria-hidden="true">${teamFlags[match.home] || '🏳️'}</span>
-            <span class="team-name">${match.home}</span>
-            <span class="match-vs" aria-hidden="true">vs</span>
-            <span class="team-name">${match.away}</span>
-            <span class="team-flag" aria-hidden="true">${teamFlags[match.away] || '🏳️'}</span>
+    <!-- ========== DASHBOARD ========== -->
+    <div class="page-section active" id="page-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card"><span class="kpi-icon">👥</span><div class="kpi-val" id="kpi-fans">64,300</div><div class="kpi-lbl">Stadium Occupancy</div><div class="kpi-trend trend-up">↑ 78% capacity</div></div>
+        <div class="kpi-card"><span class="kpi-icon">🚨</span><div class="kpi-val" style="color:#ef4444" id="kpi-alerts">3</div><div class="kpi-lbl">Active Alerts</div><div class="kpi-trend trend-down">1 critical, 2 warnings</div></div>
+        <div class="kpi-card"><span class="kpi-icon">🚌</span><div class="kpi-val" id="kpi-shuttle">6 min</div><div class="kpi-lbl">Next Express Shuttle</div><div class="kpi-trend trend-neutral">Penn Station Route</div></div>
+        <div class="kpi-card"><span class="kpi-icon">🌍</span><div class="kpi-val" style="color:#10b981">142t</div><div class="kpi-lbl">CO₂ Saved Today</div><div class="kpi-trend trend-up">↑ 65% renewable energy</div></div>
+      </div>
+      <div class="dash-grid-2">
+        <div class="panel">
+          <div class="panel-hdr"><h3>👥 Live Crowd Overview</h3><span class="live-badge">LIVE</span></div>
+          <div id="dash-crowd"></div>
+        </div>
+        <div class="panel" style="background:linear-gradient(135deg,#0d1b2a,#1a2740);border-color:rgba(139,92,246,.3)">
+          <div class="panel-hdr"><h3>🤖 AI Operational Summary</h3></div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="padding:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:9px;font-size:12px">🚨 <strong>Gate 5 at 89% capacity</strong> — redirect signage activated</div>
+            <div style="padding:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:9px;font-size:12px">⚠️ <strong>Concession bottleneck</strong> — open Section D stand recommended</div>
+            <div style="padding:10px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:9px;font-size:12px">✅ <strong>All accessibility services</strong> operational — 0 pending requests</div>
+            <div style="padding:10px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);border-radius:9px;font-size:12px">ℹ️ <strong>Solar output: 8.4 MWh</strong> — 65% of energy from renewables</div>
           </div>
-          <div class="match-meta">
-            <div class="match-stage">${match.stage}</div>
-            <div class="match-venue">📍 ${match.venue}</div>
-            <div class="match-time">🗓️ ${match.date} · ${match.time}</div>
-          </div>
-        </article>
-      `).join('');
-    }
+        </div>
+      </div>
+      <div class="panel" style="margin-bottom:18px">
+        <div class="panel-hdr"><h3>⚽ FIFA World Cup 2026 — Upcoming Matches</h3></div>
+        <div id="matches-container"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hdr"><h3>🏟️ Host Venues</h3></div>
+        <div class="venues-grid" id="venues-grid"></div>
+      </div>
+    </div>
 
-    function renderVenues() {
-      const container = document.getElementById('venues-grid');
-      if (!container) return;
-
-      container.innerHTML = VENUES.slice(0, 4).map(venue => `
-        <article style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:14px;transition:all 0.25s ease;cursor:default;" 
-          tabindex="0" 
-          aria-label="${venue.name} in ${venue.city}, capacity ${venue.capacity.toLocaleString()}"
-          onmouseover="this.style.borderColor='var(--primary)'"
-          onmouseout="this.style.borderColor='var(--border)'"
-        >
-          <div style="font-size:11px;color:var(--fifa-gold);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">${venue.country}</div>
-          <div style="font-size:13px;font-weight:700;margin-bottom:4px">${venue.name}</div>
-          <div style="font-size:11px;color:var(--text-secondary)">📍 ${venue.city}</div>
-          <div style="font-size:20px;font-weight:800;font-family:'Outfit',sans-serif;color:var(--primary-light);margin-top:8px">${(venue.capacity / 1000).toFixed(0)}K</div>
-          <div style="font-size:10px;color:var(--text-muted)">Capacity</div>
-        </article>
-      `).join('');
-    }
-
-    function renderCrowdMini() {
-      const container = document.getElementById('dash-crowd-mini');
-      if (!container) return;
-
-      const zones = [
-        { name: 'Gate 5 (South)', pct: 89, color: '#ef4444' },
-        { name: 'Main Pitch', pct: 95, color: '#ef4444' },
-        { name: 'Concessions', pct: 74, color: '#f97316' },
-        { name: 'Gate 1 (North)', pct: 65, color: '#f59e0b' },
-        { name: 'Gate 7 (West)', pct: 35, color: '#10b981' },
-        { name: 'VIP Level', pct: 82, color: '#f97316' }
-      ];
-
-      container.innerHTML = `
-        <div style="display:flex;flex-direction:column;gap:8px">
-          ${zones.map(z => `
-            <div style="display:grid;grid-template-columns:120px 1fr 48px;align-items:center;gap:8px">
-              <span style="font-size:11px;color:var(--text-secondary)">${z.name}</span>
-              <div style="height:6px;background:var(--bg-tertiary);border-radius:3px;overflow:hidden">
-                <div style="width:${z.pct}%;height:100%;background:${z.color};border-radius:3px;transition:width 0.8s ease"></div>
-              </div>
-              <span style="font-size:12px;font-weight:700;color:${z.color};text-align:right">${z.pct}%</span>
+    <!-- ========== CHAT ========== -->
+    <div class="page-section" id="page-chat">
+      <div class="chat-wrap" id="chat-wrap">
+        <div class="chat-hdr">
+          <div class="chat-hdr-left">
+            <div class="chat-avatar"><span class="ai-online-dot"></span>🤖</div>
+            <div>
+              <h3>StadiumIQ Assistant</h3>
+              <span class="chat-status" id="chat-status">● Online — ⚽ Fan Mode</span>
             </div>
-          `).join('')}
+          </div>
+          <div class="chat-hdr-right">
+            <button class="icon-btn" id="chat-clear" title="Clear chat">🗑️</button>
+            <button class="icon-btn" id="chat-speak-toggle" title="Toggle voice">🔊</button>
+          </div>
         </div>
-        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-          <span style="font-size:12px;color:var(--text-muted)">Overall: <strong style="color:var(--text-primary)">78% (64,300 fans)</strong></span>
-          <button onclick="document.getElementById('nav-crowd').click()" style="background:var(--primary);color:white;border:none;padding:6px 14px;border-radius:8px;font-size:11px;cursor:pointer;font-family:'Inter',sans-serif;">View Full Dashboard</button>
+        <div class="sugg-bar" id="sugg-bar"></div>
+        <div class="chat-msgs" id="chat-msgs"></div>
+        <div class="typing-ind" id="typing-ind">
+          <div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
+          <span class="typing-lbl">StadiumIQ is thinking...</span>
         </div>
-      `;
-    }
+        <div class="chat-input-area">
+          <div class="input-wrap">
+            <button class="mic-btn" id="mic-btn" title="Voice input">🎤</button>
+            <textarea class="chat-inp" id="chat-inp" placeholder="Ask me anything about the stadium..." rows="1" maxlength="1000"></textarea>
+            <button class="send-btn" id="send-btn">
+              <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <div class="inp-foot">
+            <span id="char-ctr">0/1000</span>
+            <span>Powered by Google Gemini AI</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    function startDashboardUpdates() {
-      setInterval(() => {
-        // Update KPIs with animated numbers
-        const fansEl = document.getElementById('kpi-fans');
-        if (fansEl) {
-          const current = parseInt(fansEl.textContent.replace(/,/g, ''));
-          const next = Math.min(82500, current + randomInRange(-200, 300));
-          animateCount(fansEl, current, next, 800);
+    <!-- ========== CROWD ========== -->
+    <div class="page-section" id="page-crowd">
+      <div class="crowd-wrap">
+        <div class="crowd-stats">
+          <div class="cstat"><span class="cstat-icon">👥</span><div><div class="cstat-val" id="cr-occ">64,300</div><div class="cstat-lbl">Current Occupancy</div><div class="cstat-sub">78% of 82,500</div></div></div>
+          <div class="cstat"><span class="cstat-icon">🌡️</span><div><div class="cstat-val" id="cr-density" style="color:#f97316">HIGH</div><div class="cstat-lbl">Overall Density</div><div class="cstat-sub" id="cr-density-pct">78% average</div></div></div>
+          <div class="cstat"><span class="cstat-icon">🚨</span><div><div class="cstat-val" style="color:#ef4444">2</div><div class="cstat-lbl">Active Alerts</div><div class="cstat-sub">1 critical, 1 warning</div></div></div>
+          <div class="cstat"><span class="cstat-icon">➡️</span><div><div class="cstat-val" id="cr-flow" style="color:#10b981">+1,240</div><div class="cstat-lbl">Entry Rate</div><div class="cstat-sub">fans/hour</div></div></div>
+        </div>
+        <div class="crowd-main">
+          <div class="heatmap-panel">
+            <div class="panel-hdr"><h3>🔥 Live Crowd Heatmap</h3><span class="live-badge">LIVE</span></div>
+            <div class="hmap-container">
+              <canvas id="heatmap-canvas" width="500" height="400"></canvas>
+              <div class="hmap-legend">
+                <span class="leg-item"><span class="leg-dot" style="background:#10b981"></span>Low</span>
+                <span class="leg-item"><span class="leg-dot" style="background:#f59e0b"></span>Moderate</span>
+                <span class="leg-item"><span class="leg-dot" style="background:#f97316"></span>High</span>
+                <span class="leg-item"><span class="leg-dot" style="background:#ef4444"></span>Critical</span>
+              </div>
+            </div>
+          </div>
+          <div class="crowd-right">
+            <div class="alerts-panel">
+              <div class="panel-hdr"><h3>⚡ Real-Time Alerts</h3><button class="ai-analyze-btn" id="ai-analyze-btn">🤖 AI Analyze</button></div>
+              <div class="alerts-list">
+                <div class="alert-item alert-critical"><span class="alert-icon">🚨</span><div><span class="alert-txt">Gate 5 (South) at 89% capacity — redirect fans to Gate 7</span><span class="alert-time">2 min ago</span></div></div>
+                <div class="alert-item alert-warning"><span class="alert-icon">⚠️</span><div><span class="alert-txt">Concession area congestion — 15+ min wait time</span><span class="alert-time">5 min ago</span></div></div>
+                <div class="alert-item alert-info"><span class="alert-icon">ℹ️</span><div><span class="alert-txt">Next shuttle from North Lot in 8 minutes</span><span class="alert-time">8 min ago</span></div></div>
+              </div>
+            </div>
+            <div class="zones-panel">
+              <div class="panel-hdr"><h3>📍 Zone Status</h3><span class="upd-time" id="zones-upd">Updated just now</span></div>
+              <div class="zones-list" id="zones-list"></div>
+            </div>
+          </div>
+        </div>
+        <div class="ai-insight-panel" id="ai-insight-panel">
+          <div class="panel-hdr"><h3>🤖 AI Operational Intelligence</h3><button class="icon-btn" id="close-insight">✕</button></div>
+          <div id="insight-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <div class="page-section" id="page-navigation">
+      <div class="nav-wrap">
+        <div class="nav-search">
+          <div class="search-wrap">🔍<input class="search-inp" id="nav-search" placeholder="Search sections, gates, services..." /></div>
+          <div class="svc-filters" id="svc-filters">
+            <button class="svc-btn" data-svc="food">🍔 Food</button>
+            <button class="svc-btn" data-svc="restroom">🚻 Restrooms</button>
+            <button class="svc-btn" data-svc="firstaid">🏥 First Aid</button>
+            <button class="svc-btn" data-svc="accessible">♿ Accessible</button>
+            <button class="svc-btn" data-svc="atm">💰 ATMs</button>
+            <button class="svc-btn" data-svc="souvenir">🛍️ Souvenirs</button>
+            <button class="svc-btn" data-svc="info">ℹ️ Info Desk</button>
+            <button class="svc-btn" data-svc="parking">🅿️ Parking</button>
+          </div>
+        </div>
+        <div class="nav-main">
+          <div class="map-panel">
+            <div class="panel-hdr"><h3>🏟️ MetLife Stadium — Interactive Map</h3><div class="map-ctrls"><button class="map-ctrl-btn" id="zoom-in">+</button><button class="map-ctrl-btn" id="zoom-out">−</button><button class="map-ctrl-btn" id="map-reset">⟲</button></div></div>
+            <div class="map-container" id="map-container"><div id="stadium-map-svg"></div></div>
+          </div>
+          <div class="nav-right">
+            <div class="gates-panel">
+              <div class="panel-hdr"><h3>🚪 Gate Status</h3></div>
+              <div class="gates-list" id="gates-list"></div>
+            </div>
+            <div class="sec-detail" id="sec-detail">
+              <div class="panel-hdr"><h3>📍 Section Details</h3><button class="icon-btn" id="close-sec-detail">✕</button></div>
+              <div id="sec-detail-content"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dir-panel" id="dir-panel">
+          <div class="panel-hdr"><h3>🧭 Directions</h3><button class="icon-btn" id="close-dir">✕</button></div>
+          <div id="dir-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TRANSPORT ========== -->
+    <div class="page-section" id="page-transport">
+      <div class="trans-wrap">
+        <div class="trans-stats">
+          <div class="tstat"><span class="tstat-icon">🚌</span><div><div class="tstat-val">5</div><div class="tstat-lbl">Active Shuttles</div></div></div>
+          <div class="tstat"><span class="tstat-icon">🅿️</span><div><div class="tstat-val" id="t-parking">2,364</div><div class="tstat-lbl">Parking Available</div></div></div>
+          <div class="tstat"><span class="tstat-icon">🚆</span><div><div class="tstat-val" id="t-train">6 min</div><div class="tstat-lbl">Next Train</div></div></div>
+          <div class="tstat"><span class="tstat-icon">🚗</span><div><div class="tstat-val" id="t-rideshare">~12m</div><div class="tstat-lbl">Rideshare Wait</div></div></div>
+        </div>
+        <div class="trans-main">
+          <div class="trans-panel">
+            <div class="panel-hdr"><h3>🚌 Shuttle Services</h3><span class="live-badge">LIVE</span></div>
+            <div class="shuttle-list" id="shuttle-list"></div>
+          </div>
+          <div class="trans-panel">
+            <div class="panel-hdr"><h3>🚆 Public Transit</h3></div>
+            <div class="metro-list" id="metro-list"></div>
+            <div class="panel-hdr" style="margin-top:18px"><h3>🚗 Rideshare Pickup Zones</h3></div>
+            <div class="rs-list">
+              <div class="rs-item"><span class="rs-logo">🟢</span><div class="rs-info"><span class="rs-name">Uber</span><span class="rs-zone">Pickup Zone: Lot A East</span></div><span class="rs-wait" style="color:#10b981" id="uber-wait">~8 min</span></div>
+              <div class="rs-item"><span class="rs-logo">🟡</span><div class="rs-info"><span class="rs-name">Lyft</span><span class="rs-zone">Pickup Zone: Gate 3 South</span></div><span class="rs-wait" style="color:#f59e0b" id="lyft-wait">~14 min</span></div>
+              <div class="rs-item"><span class="rs-logo">🔵</span><div class="rs-info"><span class="rs-name">Via (Shuttle Share)</span><span class="rs-zone">Pickup: Transit Hub</span></div><span class="rs-wait" style="color:#3b82f6">~5 min</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="parking-section">
+          <div class="panel-hdr"><h3>🅿️ Parking Availability</h3><button class="refresh-btn" id="refresh-park">⟳ Refresh</button></div>
+          <div class="parking-grid" id="parking-grid"></div>
+        </div>
+        <div class="planner-section">
+          <div class="panel-hdr"><h3>🗺️ Journey Planner</h3></div>
+          <div class="planner-form">
+            <div class="plan-inputs">
+              <div class="plan-grp"><label>From</label><input class="plan-inp" id="journey-from" placeholder="Your location (e.g. Manhattan)"/></div>
+              <div class="plan-arrow">→</div>
+              <div class="plan-grp"><label>To</label><input class="plan-inp" id="journey-to" value="MetLife Stadium" readonly/></div>
+            </div>
+            <div class="plan-opts">
+              <label><input type="radio" name="tmode" value="transit" checked> 🚆 Transit</label>
+              <label><input type="radio" name="tmode" value="shuttle"> 🚌 Shuttle</label>
+              <label><input type="radio" name="tmode" value="drive"> 🚗 Drive</label>
+              <label><input type="radio" name="tmode" value="accessible"> ♿ Accessible</label>
+            </div>
+            <button class="btn-prim" id="plan-btn">🗺️ Plan My Journey</button>
+            <div class="journey-result" id="journey-result"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== ACCESSIBILITY ========== -->
+    <div class="page-section" id="page-accessibility">
+      <div class="access-wrap">
+        <div class="access-toolbar">
+          <button class="acc-tool-btn" id="font-dec">A−</button>
+          <button class="acc-tool-btn" id="font-inc">A+</button>
+          <button class="acc-tool-btn" id="high-contrast-btn">🌓 High Contrast</button>
+          <button class="acc-tool-btn" id="read-aloud-btn">🔊 Read Aloud</button>
+          <button class="acc-tool-btn" id="keyboard-nav-btn">⌨️ Keyboard Nav</button>
+          <button class="acc-tool-btn" id="reset-access-btn">↺ Reset</button>
+        </div>
+        <div class="access-section">
+          <div class="panel-hdr"><h3>♿ Accessibility Features</h3><span class="avail-badge">All Active</span></div>
+          <div class="acc-features" id="acc-features"></div>
+        </div>
+        <div class="access-section">
+          <div class="panel-hdr"><h3>🗺️ Accessible Routes</h3></div>
+          <div class="routes-grid" id="routes-grid"></div>
+        </div>
+        <div class="access-section">
+          <div class="panel-hdr"><h3>🆘 Request Assistance</h3></div>
+          <div class="assist-grid">
+            <button class="assist-btn" id="btn-escort">🧑‍🦯 Request Escort</button>
+            <button class="assist-btn" id="btn-wheelchair">♿ Wheelchair Service</button>
+            <button class="assist-btn" id="btn-interpreter">🤟 Sign Language</button>
+            <button class="assist-btn emrg" id="btn-emrg">🚨 Emergency</button>
+          </div>
+          <div class="assist-note">💡 Look for staff in <strong>blue vests</strong> for immediate accessibility assistance throughout the stadium.</div>
+        </div>
+        <div class="access-contact">
+          <h4>📞 Accessibility Hotline</h4>
+          <div class="contact-info">
+            <span>Stadium: <strong>+1 (555) FIFA-ADA</strong></span>
+            <span>Text: <strong>72782</strong></span>
+            <span>Email: <strong>access@fifawc2026.com</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SUSTAINABILITY ========== -->
+    <div class="page-section" id="page-sustainability">
+      <div class="eco-wrap">
+        <div class="eco-hero">
+          <div>
+            <div class="eco-title">🌍 FIFA World Cup 2026<br>Sustainability Dashboard</div>
+            <div class="eco-sub">Making history — the greenest World Cup ever</div>
+          </div>
+          <div class="eco-metrics">
+            <div class="hero-metric"><span class="hero-m-val" id="eco-carbon">142.5</span><span class="hero-m-unit">tonnes CO₂</span><span class="hero-m-lbl">Saved Today</span></div>
+            <div class="hero-metric"><span class="hero-m-val" id="eco-plastic">15,200</span><span class="hero-m-unit">pieces</span><span class="hero-m-lbl">Plastic Avoided</span></div>
+            <div class="hero-metric"><span class="hero-m-val" id="eco-trees">284</span><span class="hero-m-unit">trees</span><span class="hero-m-lbl">Equivalent Saved</span></div>
+          </div>
+        </div>
+        <div class="eco-init-grid" id="eco-initiatives"></div>
+        <div class="eco-energy">
+          <div class="panel-hdr"><h3>⚡ Live Energy Mix</h3><span class="live-badge">LIVE</span></div>
+          <div class="energy-chart-wrap">
+            <canvas id="energy-donut" width="180" height="180"></canvas>
+            <div class="energy-legend">
+              <div class="e-leg-item"><span class="e-leg-color" style="background:#f59e0b"></span>Solar (65%)</div>
+              <div class="e-leg-item"><span class="e-leg-color" style="background:#3b82f6"></span>Wind (15%)</div>
+              <div class="e-leg-item"><span class="e-leg-color" style="background:#10b981"></span>Other Renewable (10%)</div>
+              <div class="e-leg-item"><span class="e-leg-color" style="background:#475569"></span>Grid (10%)</div>
+            </div>
+          </div>
+          <div class="e-stats">
+            <div class="e-stat"><span class="e-val" id="solar-out">8.4 MWh</span><span class="e-lbl">Solar Output Today</span></div>
+            <div class="e-stat"><span class="e-val" id="ev-chg">42</span><span class="e-lbl">EVs Charging Now</span></div>
+            <div class="e-stat"><span class="e-val">~18 MWh</span><span class="e-lbl">Energy Saved vs Coal</span></div>
+          </div>
+        </div>
+        <div class="eco-tips">
+          <span class="tip-lbl">💡 Eco Tip</span>
+          <p class="tip-txt" id="eco-tip"></p>
+          <div class="tip-ctrls">
+            <button class="tip-nav" id="tip-prev">◀</button>
+            <div class="tip-dots" id="tip-dots"></div>
+            <button class="tip-nav" id="tip-next">▶</button>
+          </div>
+        </div>
+        <div class="eco-pledge">
+          <h3>🤝 Take the Green Pledge</h3>
+          <p>Join over <strong id="pledge-count">12,847</strong> fans who have pledged to go green at FIFA World Cup 2026!</p>
+          <div class="pledge-opts">
+            <label class="pledge-check"><input type="checkbox" id="pledge-transit"> I'll use public transit 🚆</label>
+            <label class="pledge-check"><input type="checkbox" id="pledge-plastic"> I'll avoid single-use plastic ♻️</label>
+            <label class="pledge-check"><input type="checkbox" id="pledge-water"> I'll bring a reusable bottle 💧</label>
+            <label class="pledge-check"><input type="checkbox" id="pledge-food"> I'll try a plant-based meal 🥗</label>
+          </div>
+          <button class="btn-pledge" id="pledge-btn">🌍 Take the Pledge!</button>
+          <div id="pledge-result" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end page-content -->
+</main>
+</div><!-- end app -->
+
+<!-- ===== SETTINGS MODAL ===== -->
+<div class="settings-overlay" id="settings-overlay">
+  <div class="settings-modal">
+    <h2>⚙️ Settings</h2>
+    <div class="set-grp">
+      <label class="set-lbl">🔑 Google Gemini API Key</label>
+      <input type="password" class="set-inp" id="api-key-inp" placeholder="AIza..." autocomplete="off"/>
+      <span class="set-note">Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> — stored only in your browser, never sent to our servers.</span>
+    </div>
+    <div class="set-grp">
+      <label class="set-lbl">🌐 Display Language</label>
+      <select class="set-inp" id="set-lang">
+        <option value="en">🇺🇸 English</option><option value="es">🇪🇸 Español</option>
+        <option value="fr">🇫🇷 Français</option><option value="ar">🇸🇦 العربية</option>
+        <option value="pt">🇧🇷 Português</option><option value="de">🇩🇪 Deutsch</option>
+        <option value="zh">🇨🇳 中文</option><option value="ja">🇯🇵 日本語</option>
+        <option value="hi">🇮🇳 हिंदी</option><option value="ko">🇰🇷 한국어</option>
+      </select>
+    </div>
+    <div class="set-grp">
+      <label class="set-lbl">👤 Default Persona</label>
+      <select class="set-inp" id="set-persona">
+        <option value="fan">⚽ Fan</option><option value="organizer">📋 Organizer</option>
+        <option value="volunteer">🙋 Volunteer</option><option value="staff">🔧 Staff</option>
+      </select>
+    </div>
+    <div class="set-grp">
+      <label class="set-check-lbl"><input type="checkbox" id="set-speak"> 🔊 Auto-speak AI responses</label>
+    </div>
+    <div class="set-actions">
+      <button class="btn-sec" id="set-cancel">Cancel</button>
+      <button class="btn-prim" id="set-save">💾 Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div id="toast-container" style="position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:7px"></div>
+
+<script>
+/* ============================================================
+   StadiumIQ — Complete Self-Contained Application
+   FIFA World Cup 2026 Smart Stadium Intelligence Hub
+   ============================================================ */
+
+// ====== STATE ======
+const state = {
+  page: 'dashboard',
+  persona: 'fan',
+  lang: 'en',
+  apiKey: '',
+  fontSize: 16,
+  highContrast: false,
+  voiceEnabled: false,
+  chatMessages: [],
+  isTyping: false,
+  tipIndex: 0,
+  crowdData: {},
+  shuttleData: [],
+  metroData: [],
+  parkingData: [],
+  crowdInterval: null,
+  transInterval: null,
+  ecoInterval: null,
+  mapScale: 1
+};
+
+// ====== CONSTANTS ======
+const TOTAL_CAPACITY = 82500;
+const VENUES = [
+  {name:'MetLife Stadium',city:'East Rutherford, NJ',country:'USA',cap:82500},
+  {name:'SoFi Stadium',city:'Inglewood, CA',country:'USA',cap:70240},
+  {name:'AT&T Stadium',city:'Arlington, TX',country:'USA',cap:80000},
+  {name:'Estadio Azteca',city:'Mexico City',country:'MEX',cap:87523},
+  {name:'Caesars Superdome',city:'New Orleans, LA',country:'USA',cap:76468},
+  {name:'BMO Field',city:'Toronto',country:'CAN',cap:30000},
+  {name:'Estadio BBVA',city:'Monterrey',country:'MEX',cap:53500},
+  {name:'Arrowhead Stadium',city:'Kansas City',country:'USA',cap:76416}
+];
+const MATCHES = [
+  {home:'USA 🇺🇸',away:'Mexico 🇲🇽',venue:'MetLife Stadium',date:'Jun 11',time:'20:00',stage:'Group A'},
+  {home:'Brazil 🇧🇷',away:'Germany 🇩🇪',venue:'SoFi Stadium',date:'Jun 12',time:'18:00',stage:'Group B'},
+  {home:'France 🇫🇷',away:'Argentina 🇦🇷',venue:'AT&T Stadium',date:'Jun 13',time:'20:00',stage:'Group C'},
+  {home:'Spain 🇪🇸',away:'Portugal 🇵🇹',venue:'Azteca',date:'Jun 14',time:'17:00',stage:'Group D'},
+  {home:'England 🏴󠁧󠁢󠁥󠁮󠁧󠁿',away:'Japan 🇯🇵',venue:'MetLife Stadium',date:'Jun 15',time:'19:00',stage:'Group E'},
+];
+const SECTIONS = [
+  {id:'A',gate:1,level:'Field',type:'premium',cap:5000,services:['VIP Lounge','Premium Dining','Concierge']},
+  {id:'B',gate:2,level:'Lower',type:'general',cap:8000,services:['Concession','First Aid','Restrooms']},
+  {id:'C',gate:3,level:'Lower',type:'general',cap:8000,services:['Concession','Souvenir Shop','Restrooms']},
+  {id:'D',gate:4,level:'Mid',type:'general',cap:10000,services:['Food Court','Bar','Restrooms']},
+  {id:'E',gate:5,level:'Mid',type:'general',cap:10000,services:['Concession','First Aid','Restrooms']},
+  {id:'F',gate:6,level:'Upper',type:'budget',cap:12000,services:['Concession','Restrooms']},
+  {id:'G',gate:7,level:'Upper',type:'budget',cap:12000,services:['Concession','Vegan Options','Restrooms']},
+  {id:'H',gate:8,level:'Upper',type:'accessible',cap:5000,services:['Wheelchair Access','First Aid','Family Restroom','Hearing Loop']}
+];
+const GATES = [
+  {id:1,name:'Gate 1 - North Main',wait:3,queue:'short',services:['Entry','Security','Info Desk']},
+  {id:2,name:'Gate 2 - North East',wait:7,queue:'medium',services:['Entry','Security','Accessible']},
+  {id:3,name:'Gate 3 - East',wait:12,queue:'long',services:['Entry','Security','Souvenir']},
+  {id:4,name:'Gate 4 - South East',wait:5,queue:'short',services:['Entry','Security']},
+  {id:5,name:'Gate 5 - South Main',wait:22,queue:'critical',services:['Entry','Security','VIP']},
+  {id:6,name:'Gate 6 - South West',wait:6,queue:'medium',services:['Entry','Security','Family']},
+  {id:7,name:'Gate 7 - West',wait:2,queue:'short',services:['Entry','Security']},
+  {id:8,name:'Gate 8 - North West',wait:8,queue:'medium',services:['Entry','Security','Accessible']}
+];
+const ZONE_DATA = [
+  {id:'gate1',name:'Gate 1 - North',x:50,y:10,base:75,r:40},
+  {id:'gate2',name:'Gate 2 - NE',x:80,y:25,base:55,r:35},
+  {id:'gate3',name:'Gate 3 - East',x:90,y:50,base:60,r:38},
+  {id:'gate4',name:'Gate 4 - SE',x:80,y:75,base:45,r:32},
+  {id:'gate5',name:'Gate 5 - South',x:50,y:90,base:89,r:45},
+  {id:'gate6',name:'Gate 6 - SW',x:20,y:75,base:50,r:33},
+  {id:'gate7',name:'Gate 7 - West',x:10,y:50,base:40,r:30},
+  {id:'gate8',name:'Gate 8 - NW',x:20,y:25,base:65,r:37},
+  {id:'pitch',name:'Pitch Level',x:50,y:50,base:95,r:55},
+  {id:'concessions',name:'Concession Area',x:35,y:60,base:70,r:40},
+  {id:'food',name:'Food Court',x:65,y:40,base:68,r:38},
+  {id:'parking',name:'Main Parking',x:50,y:0,base:55,r:50}
+];
+const SHUTTLES = [
+  {id:1,name:'Express - Downtown',icon:'🚌',color:'#3b82f6',stops:['MetLife Stadium','Secaucus Junction','Penn Station NYC'],freq:15,nextIn:8,cap:55,occ:42},
+  {id:2,name:'Airport Express',icon:'✈️',color:'#8b5cf6',stops:['MetLife Stadium','Newark Airport','JFK Terminal 4'],freq:30,nextIn:22,cap:44,occ:38},
+  {id:3,name:'North Shuttle',icon:'🚐',color:'#10b981',stops:['MetLife Stadium','North Lot A','North Lot B'],freq:10,nextIn:3,cap:25,occ:12},
+  {id:4,name:'Hotel Circuit',icon:'🏨',color:'#f59e0b',stops:['MetLife Stadium','Marriott Meadowlands','Hilton East Rutherford'],freq:20,nextIn:14,cap:44,occ:31},
+  {id:5,name:'Fan Zone Link',icon:'⚽',color:'#ef4444',stops:['MetLife Stadium','FIFA Fan Festival','Times Square'],freq:25,nextIn:19,cap:55,occ:55}
+];
+const METRO = [
+  {id:'njtransit',name:'NJ Transit - Meadowlands Line',color:'#ef4444',next:6,dir:'From Penn Station',plat:'Platform 1, 2'},
+  {id:'bus139',name:'NJ Transit Bus 139',color:'#3b82f6',next:12,dir:'From Port Authority',plat:'Bus Bay 4'},
+  {id:'bus190',name:'NJ Transit Bus 190',color:'#10b981',next:18,dir:'From Secaucus Junction',plat:'Bus Bay 7'}
+];
+const PARKING = [
+  {id:'A',name:'Lot A - North',total:2500,avail:847,dist:'5 min',price:'$45',accessible:80},
+  {id:'B',name:'Lot B - North',total:2000,avail:312,dist:'8 min',price:'$45',accessible:60},
+  {id:'C',name:'Lot C - South',total:3000,avail:1205,dist:'10 min',price:'$40',accessible:100},
+  {id:'D',name:'Lot D - East',total:1500,avail:0,dist:'12 min',price:'$40',accessible:40},
+  {id:'VIP',name:'VIP Premium',total:500,avail:73,dist:'2 min',price:'$120',accessible:50}
+];
+const ECO_TIPS = [
+  '♻️ Use labeled recycling stations at every gate entrance.',
+  '🚆 You saved ~2.5kg CO₂ by taking public transit today!',
+  '💧 Refill stations at all concourse areas — bring your bottle.',
+  '🥗 Try plant-based menu at Section G — great taste, greener planet!',
+  '🔋 EV charging available at Parking Lot A (42 stations).',
+  '📱 Go paperless — use your digital ticket to reduce paper waste.',
+  '🌡️ Smart HVAC optimizes energy use in real-time across the stadium.',
+  '🚶 Walking routes from transit are scenic and emission-free!'
+];
+const ECO_INITIATIVES = [
+  {id:'solar',icon:'☀️',title:'Solar Power Grid',val:'8.4 MWh',desc:'12,000 solar panels on stadium roof',prog:65,target:'15 MWh/day',color:'#f59e0b'},
+  {id:'waste',icon:'♻️',title:'Zero Waste Program',val:'78% Recycled',desc:'Smart sorting bins + fan awareness',prog:78,target:'90% target',color:'#10b981'},
+  {id:'water',icon:'💧',title:'Water Conservation',val:'23,400 L',desc:'Greywater recycling saves water daily',prog:60,target:'40,000 L/day',color:'#3b82f6'},
+  {id:'transport',icon:'🚆',title:'Green Transport',val:'42% via transit',desc:'Transit incentives reduce vehicle emissions',prog:42,target:'60% target',color:'#8b5cf6'},
+  {id:'food',icon:'🥗',title:'Sustainable Food',val:'35% plant-based',desc:'Plant-based options reduce food carbon',prog:35,target:'50% target',color:'#ec4899'},
+  {id:'carbon',icon:'🌳',title:'Carbon Offset',val:'142.5t CO₂',desc:'Equivalent to preserving 284 trees',prog:55,target:'260t target',color:'#22c55e'}
+];
+const ACC_FEATURES = [
+  {icon:'♿',title:'Wheelchair Access',desc:'Designated viewing areas with unobstructed sightlines',locs:['Section H','Sections 100-105','Sections 200-205'],color:'#3b82f6'},
+  {icon:'👂',title:'Hearing Assistance',desc:'Hearing loops, sign language interpreters, visual alerts',locs:['All Premium Areas','Gates 1, 3, 5'],color:'#8b5cf6'},
+  {icon:'👁️',title:'Visual Assistance',desc:'Audio description, braille maps, guide dog relief areas',locs:['On Request','Gates 2, 6'],color:'#ec4899'},
+  {icon:'🚶',title:'Mobility Support',desc:'Accessible pathways, elevator priority, companion seating',locs:['All Gates','Concourse Level'],color:'#10b981'},
+  {icon:'🧠',title:'Sensory Support',desc:'Quiet zones, sensory kits, reduced stimulation areas',locs:['Section H Lounge','First Aid Rooms'],color:'#f59e0b'},
+  {icon:'👨‍👩‍👧',title:'Family Assistance',desc:'Family restrooms, baby changing, lost child protocol',locs:['Gates 2, 4, 6, 8','Main Concourse'],color:'#f97316'}
+];
+const ACC_ROUTES = [
+  {from:'Main Entrance',to:'Section H Wheelchair',steps:['Enter Gate 2','Turn left at security','Follow blue accessibility corridor','Take elevator to Level 1','Section H is clearly marked'],time:'8 min'},
+  {from:'Parking Lot A',to:'Accessible Seating',steps:['Use accessible parking spaces (P1)','Follow orange accessibility markers','Board accessible shuttle (every 10 min)','Enter via Gate 8 (accessible)'],time:'12 min'},
+  {from:'Metro Station',to:'Stadium Entrance',steps:['Exit Metro Line 3 at Stadium stop','Board accessible transit bridge','Follow tactile guide paths to Gate 2','Use dedicated accessible entry lane'],time:'6 min'}
+];
+const PERSONA_SUGGESTIONS = {
+  fan:['🗺️ How do I get to Section 114?','🍕 Where can I find food near Gate 3?','🚌 When is the next shuttle downtown?','♿ Where are accessible entrances?','⚽ What time does the match start?','🚻 Where is the nearest restroom?'],
+  organizer:['📊 Crowd density at Gate 2','🚨 Current security alerts','👥 Staff deployment status','⚡ Emergency protocol Section B','📈 Capacity utilization report','🔄 Vendor coordination update'],
+  volunteer:['📍 Where is my station?','🌐 How to help non-English speakers?','🏥 How to get first aid?','📋 My shift responsibilities','🔗 How to contact security?','♿ Accessibility assistance protocol'],
+  staff:['🔧 Report maintenance - Gate 4','💡 Utility monitoring','🚪 Access control override','📦 Vendor delivery coordination','🌡️ HVAC status check','🔋 Power backup status']
+};
+const PERSONA_PROMPTS = {
+  fan:`You are StadiumIQ, an intelligent FIFA World Cup 2026 assistant for fans. Help fans navigate stadiums, find seats, locate food/beverages, restrooms, first aid, fan zones, and transportation. Be friendly, enthusiastic about football, and use emojis where appropriate.`,
+  organizer:`You are StadiumIQ, an operational intelligence assistant for FIFA World Cup 2026 organizers. Help manage stadium capacity, crowd flow, security alerts, vendor coordination, event scheduling, and emergency protocols. Be concise and professional.`,
+  volunteer:`You are StadiumIQ, a smart support assistant for FIFA World Cup 2026 volunteers. Help volunteers understand their roles, locate stations, communicate with staff, handle fan queries, and manage multilingual interactions. Be clear and step-by-step.`,
+  staff:`You are StadiumIQ, an operational assistant for FIFA World Cup 2026 venue staff. Assist with maintenance requests, facility management, access control, utility monitoring, and vendor logistics. Be technical and solution-oriented.`
+};
+
+// ====== HELPERS ======
+const rnd = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
+const fmt = n => new Intl.NumberFormat('en-US').format(n);
+const densityColor = p => p<40?'#10b981':p<70?'#f59e0b':p<85?'#f97316':'#ef4444';
+const densityLabel = p => p<40?'Low':p<70?'Moderate':p<85?'High':'Critical';
+const getTime = () => new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const getMsgTime = () => new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+
+function showToast(msg,type='info',dur=3000){
+  const c=document.getElementById('toast-container');
+  const colors={info:'#3b82f6',success:'#10b981',warning:'f59e0b',error:'#ef4444'};
+  const icons={info:'ℹ️',success:'✅',warning:'⚠️',error:'❌'};
+  const t=document.createElement('div');
+  t.style.cssText=`padding:11px 16px;border-radius:10px;color:#fff;background:${colors[type]||colors.info};font-size:13px;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.3);animation:fadeIn .3s ease;max-width:280px;display:flex;align-items:center;gap:7px;font-family:Inter,sans-serif`;
+  t.innerHTML=`${icons[type]||''} ${msg}`;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(),dur);
+}
+
+function sanitize(s){const d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
+
+function parseMarkdown(t){
+  return t
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/^#{1,3}\s(.+)/gm,'<h4>$1</h4>')
+    .replace(/\n- (.+)/g,'\n<li>$1</li>')
+    .replace(/\n/g,'<br>')
+    .replace(/(<li>[\s\S]*?<\/li>(?:\s*<li>[\s\S]*?<\/li>)*)/g,'<ul>$1</ul>');
+}
+
+function storeGet(k,def=null){try{const v=localStorage.getItem(k);return v?JSON.parse(v):def;}catch{return def;}}
+function storeSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+function speak(text){
+  if('speechSynthesis' in window){
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g,''));
+    u.rate=0.9;u.pitch=1;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ====== CLOCK ======
+function updateClock(){const el=document.getElementById('htime');if(el)el.textContent=getTime();}
+setInterval(updateClock,1000);
+updateClock();
+
+// ====== NAVIGATION ======
+function navigateTo(page){
+  if(state.page===page)return;
+  state.page=page;
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');n.removeAttribute('aria-current');});
+  const section=document.getElementById('page-'+page);
+  if(section)section.classList.add('active');
+  const navBtn=document.querySelector(`.nav-item[data-page="${page}"]`);
+  if(navBtn){navBtn.classList.add('active');navBtn.setAttribute('aria-current','page');}
+  const names={dashboard:'Dashboard',chat:'AI Assistant',crowd:'Crowd Mgmt',navigation:'Navigation',transport:'Transport',accessibility:'Accessibility',sustainability:'Eco Tracker'};
+  const bc=document.getElementById('breadcrumb');
+  if(bc)bc.textContent=names[page]||page;
+  closeMobileSidebar();
+  // Init on first visit
+  if(!window['_init_'+page]){window['_init_'+page]=true;initPage(page);}
+}
+
+function initPage(page){
+  if(page==='crowd')initCrowd();
+  if(page==='navigation')initNavigation();
+  if(page==='transport')initTransport();
+  if(page==='accessibility')initAccessibility();
+  if(page==='sustainability')initSustainability();
+  if(page==='chat')initChat();
+}
+
+// ====== PERSONA SWITCH ======
+function switchPersona(persona){
+  state.persona=persona;
+  document.querySelectorAll('.persona-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
+  const btn=document.querySelector(`.persona-btn[data-persona="${persona}"]`);
+  if(btn){btn.classList.add('active');btn.setAttribute('aria-pressed','true');}
+  const modes={fan:'⚽ Fan Mode',organizer:'📋 Organizer Mode',volunteer:'🙋 Volunteer Mode',staff:'🔧 Staff Mode'};
+  const statusEl=document.getElementById('chat-status');
+  if(statusEl)statusEl.textContent=`● Online — ${modes[persona]}`;
+  // Update suggestions
+  renderSuggestions();
+  // Reset chat
+  clearChat();
+  storeSet('sq_persona',persona);
+  showToast(`Switched to ${persona.charAt(0).toUpperCase()+persona.slice(1)} mode`,'success');
+}
+
+// ====== SETTINGS ======
+function loadSettings(){
+  state.apiKey=storeGet('sq_apikey','');
+  state.lang=storeGet('sq_lang','en');
+  state.persona=storeGet('sq_persona','fan');
+  state.voiceEnabled=storeGet('sq_speak',false);
+  state.fontSize=storeGet('sq_fontsize',16);
+  state.highContrast=storeGet('sq_contrast',false);
+  if(state.apiKey)document.getElementById('api-key-inp').value=state.apiKey;
+  document.getElementById('set-lang').value=state.lang;
+  document.getElementById('set-persona').value=state.persona;
+  document.getElementById('set-speak').checked=state.voiceEnabled;
+  document.getElementById('lang-sel').value=state.lang;
+  document.querySelectorAll('.persona-btn').forEach(b=>b.classList.remove('active'));
+  const pb=document.querySelector(`.persona-btn[data-persona="${state.persona}"]`);
+  if(pb)pb.classList.add('active');
+  if(state.highContrast)document.body.classList.add('high-contrast');
+  if(state.fontSize!==16)document.documentElement.style.fontSize=state.fontSize+'px';
+}
+
+function saveSettings(){
+  const key=document.getElementById('api-key-inp').value.trim();
+  const lang=document.getElementById('set-lang').value;
+  const persona=document.getElementById('set-persona').value;
+  const speak_=document.getElementById('set-speak').checked;
+  if(key){storeSet('sq_apikey',key);state.apiKey=key;showToast('✅ API key saved! Full AI mode enabled.','success');}
+  else{storeSet('sq_apikey','');state.apiKey='';showToast('Demo mode (no API key)','info');}
+  storeSet('sq_lang',lang);state.lang=lang;
+  storeSet('sq_speak',speak_);state.voiceEnabled=speak_;
+  document.getElementById('lang-sel').value=lang;
+  switchPersona(persona);
+  closeSettings();
+}
+
+function openSettings(){document.getElementById('settings-overlay').classList.add('open');}
+function closeSettings(){document.getElementById('settings-overlay').classList.remove('open');}
+function closeMobileSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ====== DASHBOARD INIT ======
+function initDashboard(){
+  // Matches
+  const mc=document.getElementById('matches-container');
+  if(mc)mc.innerHTML=MATCHES.map(m=>`
+    <div class="match-card">
+      <div class="match-teams"><span class="t-name">${m.home}</span><span class="m-vs">vs</span><span class="t-name">${m.away}</span></div>
+      <div class="match-meta"><div class="m-stage">${m.stage}</div><div class="m-venue">📍 ${m.venue}</div><div class="m-time">🗓️ ${m.date} · ${m.time}</div></div>
+    </div>`).join('');
+  // Venues
+  const vg=document.getElementById('venues-grid');
+  if(vg)vg.innerHTML=VENUES.slice(0,4).map(v=>`
+    <div class="venue-card">
+      <div class="v-country">${v.country}</div>
+      <div class="v-name">${v.name}</div>
+      <div class="v-city">📍 ${v.city}</div>
+      <div class="v-cap">${(v.cap/1000).toFixed(0)}K</div>
+      <div class="v-cap-lbl">Capacity</div>
+    </div>`).join('');
+  // Mini crowd
+  const dc=document.getElementById('dash-crowd');
+  if(dc){
+    const zones=[{name:'Gate 5 (South)',p:89,c:'#ef4444'},{name:'Main Pitch',p:95,c:'#ef4444'},{name:'Concessions',p:74,c:'#f97316'},{name:'Gate 1 (North)',p:65,c:'#f59e0b'},{name:'Gate 7 (West)',p:35,c:'#10b981'},{name:'VIP Level',p:82,c:'#f97316'}];
+    dc.innerHTML=`<div style="display:flex;flex-direction:column;gap:7px">${zones.map(z=>`<div style="display:grid;grid-template-columns:120px 1fr 40px;align-items:center;gap:7px"><span style="font-size:11px;color:#94a3b8">${z.name}</span><div style="height:5px;background:#1a2740;border-radius:3px;overflow:hidden"><div style="width:${z.p}%;height:100%;background:${z.c};border-radius:3px"></div></div><span style="font-size:11px;font-weight:700;color:${z.c};text-align:right">${z.p}%</span></div>`).join('')}</div><div style="margin-top:12px;padding-top:10px;border-top:1px solid #1e3a5f;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;color:#475569">Overall: <strong style="color:#f8fafc">78% (64,300)</strong></span><button onclick="navigateTo('crowd')" style="background:#3b82f6;color:#fff;border:none;padding:5px 12px;border-radius:8px;font-size:11px;cursor:pointer;font-family:Inter,sans-serif">View Full Dashboard</button></div>`;
+  }
+  // Live KPI updates
+  setInterval(()=>{
+    const el=document.getElementById('kpi-fans');
+    if(el){const c=parseInt(el.textContent.replace(/,/g,''));el.textContent=fmt(Math.min(82500,Math.max(50000,c+rnd(-200,300))));}
+    const se=document.getElementById('kpi-shuttle');
+    if(se)se.textContent=rnd(3,15)+' min';
+  },5000);
+}
+
+// ====== CHAT ======
+function initChat(){
+  renderSuggestions();
+  addChatMessage('assistant',getWelcomeMsg());
+}
+
+function getWelcomeMsg(){
+  const msgs={
+    fan:'👋 Welcome to **StadiumIQ**! I\'m your AI-powered companion for FIFA World Cup 2026.\n\nI can help you with:\n- 🗺️ Stadium navigation & seat finding\n- 🍔 Food, beverages & services\n- 🚌 Transportation & parking\n- ♿ Accessibility support\n- 🌐 Multilingual assistance\n- ⚽ Match info & schedules',
+    organizer:'📋 **StadiumIQ Ops Console** ready.\n\nOperational intelligence active for:\n- 👥 Real-time crowd analytics\n- 🚨 Security & emergency alerts\n- 📊 Capacity optimization\n- 🔄 Staff coordination\n\nWhat operational data do you need?',
+    volunteer:'🙋 **Hello Volunteer!** StadiumIQ here to support you.\n\nI can assist with:\n- 📍 Station assignments & navigation\n- 🌐 Multilingual fan assistance\n- 🏥 Emergency & first aid protocols\n- 📋 Shift responsibilities',
+    staff:'🔧 **StadiumIQ Facility Management** online.\n\nAvailable for:\n- 🏗️ Maintenance request routing\n- 💡 Utility monitoring\n- 🚪 Access control\n- 📦 Vendor coordination'
+  };
+  return msgs[state.persona]||msgs.fan;
+}
+
+function renderSuggestions(){
+  const bar=document.getElementById('sugg-bar');
+  if(!bar)return;
+  bar.innerHTML=(PERSONA_SUGGESTIONS[state.persona]||[]).map(s=>`<button class="sugg-chip" onclick="handleSuggestion(this)">${sanitize(s)}</button>`).join('');
+}
+
+window.handleSuggestion=function(btn){
+  const txt=btn.textContent;
+  const inp=document.getElementById('chat-inp');
+  if(inp){inp.value=txt;sendMessage();}
+  document.getElementById('sugg-bar').style.display='none';
+};
+
+function addChatMessage(role,text,isFallback=false){
+  const msgs=document.getElementById('chat-msgs');
+  if(!msgs)return;
+  const id='msg_'+Date.now();
+  const time=getMsgTime();
+  const isUser=role==='user';
+  const div=document.createElement('div');
+  div.className='chat-msg '+(isUser?'user-msg':'ai-msg');
+  div.id=id;
+  div.dataset.rawText=text;
+  const formatted=isUser?sanitize(text):parseMarkdown(text);
+  div.innerHTML=`<div class="msg-bubble ${isUser?'user-bubble':''}">
+    ${!isUser?'<span class="ai-ic">🤖</span>':''}
+    <div class="msg-content">
+      <div class="msg-txt">${formatted}</div>
+      <div class="msg-foot">
+        <span class="msg-time">${time}</span>
+        ${isFallback&&!isUser?'<span class="fallback-badge">Demo Mode</span>':''}
+        ${!isUser?`<div class="msg-actions"><button class="msg-act-btn" onclick="copyMsg('${id}')">📋</button><button class="msg-act-btn" onclick="speakMsg('${id}')">🔊</button></div>`:''}
+      </div>
+    </div>
+    ${isUser?'<span class="usr-ic">👤</span>':''}
+  </div>`;
+  msgs.appendChild(div);
+  setTimeout(()=>div.classList.add('appear'),50);
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+window.copyMsg=function(id){
+  const el=document.getElementById(id);
+  if(el){navigator.clipboard&&navigator.clipboard.writeText(el.dataset.rawText||'');showToast('Copied!','success');}
+};
+window.speakMsg=function(id){
+  const el=document.getElementById(id);
+  if(el)speak(el.dataset.rawText||'');
+};
+
+function setTyping(show){
+  const t=document.getElementById('typing-ind');
+  if(t)t.style.display=show?'flex':'none';
+  if(show){const m=document.getElementById('chat-msgs');if(m)m.scrollTop=m.scrollHeight;}
+}
+
+async function sendMessage(){
+  if(state.isTyping)return;
+  const inp=document.getElementById('chat-inp');
+  const text=inp?inp.value.trim():'';
+  if(!text)return;
+  inp.value='';
+  inp.style.height='auto';
+  addChatMessage('user',text);
+  setTyping(true);
+  state.isTyping=true;
+  try{
+    const resp=await callGemini(text);
+    setTyping(false);state.isTyping=false;
+    addChatMessage('assistant',resp.text,resp.isFallback);
+    if(state.voiceEnabled)speak(resp.text);
+  }catch(e){
+    setTyping(false);state.isTyping=false;
+    addChatMessage('assistant','⚠️ Sorry, I encountered an error. Please try again.',true);
+  }
+}
+
+async function callGemini(userMsg){
+  if(!state.apiKey){
+    return{text:getFallback(userMsg),isFallback:true};
+  }
+  const langCtx={en:'Respond in English.',es:'Responde en español.',fr:'Réponds en français.',ar:'أجب باللغة العربية.',pt:'Responda em português.',de:'Antworte auf Deutsch.',zh:'用中文回答.',ja:'日本語で答えてください.',hi:'हिंदी में उत्तर दें.',ko:'한국어로 답하세요.'};
+  const prompt=`${PERSONA_PROMPTS[state.persona]||PERSONA_PROMPTS.fan}\n\nLANGUAGE: ${langCtx[state.lang]||langCtx.en}\n\nSTADIUM CONTEXT:\n- Event: FIFA World Cup 2026\n- Stadium: MetLife Stadium (82,500 capacity, 78% occupied)\n- Current Time: ${new Date().toLocaleTimeString()}\n\nUSER QUERY: ${userMsg}\n\nProvide a helpful, accurate response. For navigation give specific gate/section directions. For emergencies direct to security (Gate 1, Section A) or first aid (Sections B, E, H). Keep responses concise but complete.`;
+  try{
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:.7,topK:40,topP:.95,maxOutputTokens:1024}})
+    });
+    if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'API error '+r.status);}
+    const d=await r.json();
+    return{text:d.candidates?.[0]?.content?.parts?.[0]?.text||'No response.',isFallback:false};
+  }catch(e){
+    console.error('Gemini error:',e);
+    return{text:getFallback(userMsg)+'\n\n⚠️ _AI Error: '+sanitize(e.message)+'_',isFallback:true};
+  }
+}
+
+function getFallback(q){
+  const lq=q.toLowerCase();
+  if(lq.includes('food')||lq.includes('eat')||lq.includes('hungry'))return'🍔 **Food & Beverages**: Concession stands at every gate entrance (Sections A, B, C, D). Premium dining at Section E Level 2. Vegetarian/vegan options at Section G. Average wait: ~8 min.';
+  if(lq.includes('seat')||lq.includes('section')||lq.includes('find'))return'🗺️ **Navigation**: Use the Navigation tab for the interactive map! Gates open 2 hours before kickoff. Elevators available at Gates 1, 3, and 5.';
+  if(lq.includes('bathroom')||lq.includes('restroom')||lq.includes('toilet'))return'🚻 **Restrooms**: Available at every section concourse. Accessible restrooms with family rooms at Gates 2, 4, 6. Current wait: Low (< 3 min).';
+  if(lq.includes('transport')||lq.includes('bus')||lq.includes('train')||lq.includes('parking'))return'🚌 **Transportation**: Express shuttles every 15 min from main gates. Next bus: 6 min. Parking Lot A (North) has availability. Metro Line 3 direct to stadium.';
+  if(lq.includes('emergency')||lq.includes('medical')||lq.includes('first aid'))return'🏥 **EMERGENCY**: First Aid at Sections B, E, H. Security Command: Gate 1 Section A. Stadium emergency: Ext. 911. Staff in red vests assist immediately.';
+  if(lq.includes('crowd')||lq.includes('busy'))return'👥 **Crowd Status**: 78% occupancy (64,300/82,500). Hotspot: Gate 5 South (89% — use Gate 7 instead, only 2 min wait). North concourse less crowded.';
+  if(lq.includes('accessibility')||lq.includes('wheelchair')||lq.includes('disabled'))return'♿ **Accessibility**: Wheelchair areas at Sections 100-105 (field) and H (upper). Companion seating available. Hearing loops in all premium areas. Guide dog relief at Gates 2 and 6.';
+  if(lq.includes('schedule')||lq.includes('match')||lq.includes('game')||lq.includes('time'))return'⚽ **Match Schedule**: USA vs Mexico — Jun 11, 20:00 · Brazil vs Germany — Jun 12, 18:00 · France vs Argentina — Jun 13, 20:00. Gates open 2 hours before kickoff.';
+  return'⚽ **StadiumIQ**: I\'m here to help with navigation, crowd updates, food, transport, and more! Enter your Gemini API key in ⚙️ Settings for full AI responses, or ask me about specific services.';
+}
+
+function clearChat(){
+  const m=document.getElementById('chat-msgs');
+  if(m)m.innerHTML='';
+  const s=document.getElementById('sugg-bar');
+  if(s)s.style.display='flex';
+  renderSuggestions();
+  setTimeout(()=>addChatMessage('assistant',getWelcomeMsg()),300);
+}
+
+// ====== CROWD ======
+function initCrowd(){
+  ZONE_DATA.forEach(z=>{state.crowdData[z.id]={...z,current:Math.min(100,Math.max(5,z.base+rnd(-8,8)))}});
+  const canvas=document.getElementById('heatmap-canvas');
+  if(canvas)drawHeatmap(canvas);
+  renderZones();
+  state.crowdInterval=setInterval(()=>{
+    Object.keys(state.crowdData).forEach(id=>{
+      const z=state.crowdData[id];
+      z.current=Math.min(100,Math.max(5,z.current+(rnd(-5,5)*0.3)));
+    });
+    const canvas=document.getElementById('heatmap-canvas');
+    if(canvas)drawHeatmap(canvas);
+    renderZones();
+    // Update KPIs
+    const avgD=Object.values(state.crowdData).reduce((a,z)=>a+z.current,0)/Object.keys(state.crowdData).length;
+    let occ=Math.round((avgD/100)*TOTAL_CAPACITY)+rnd(-300,300);
+    occ=Math.min(TOTAL_CAPACITY,Math.max(50000,occ));
+    const oe=document.getElementById('cr-occ');if(oe)oe.textContent=fmt(occ);
+    const dp=Math.round((occ/TOTAL_CAPACITY)*100);
+    const de=document.getElementById('cr-density');if(de){de.textContent=densityLabel(dp).toUpperCase();de.style.color=densityColor(dp);}
+    const dp2=document.getElementById('cr-density-pct');if(dp2)dp2.textContent=dp+'% average';
+    const fe=document.getElementById('cr-flow');if(fe)fe.textContent='+'+fmt(rnd(800,1600));
+    const zu=document.getElementById('zones-upd');if(zu)zu.textContent='Updated: '+getMsgTime();
+  },3000);
+  document.getElementById('ai-analyze-btn')?.addEventListener('click',runCrowdAI);
+  document.getElementById('close-insight')?.addEventListener('click',()=>{document.getElementById('ai-insight-panel').style.display='none';});
+}
+
+function drawHeatmap(canvas){
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#0a0f1a';ctx.fillRect(0,0,W,H);
+  // Stadium oval
+  ctx.beginPath();ctx.ellipse(W/2,H/2,W*.45,H*.45,0,0,Math.PI*2);ctx.fillStyle='#1a2535';ctx.fill();ctx.strokeStyle='#2d4a6e';ctx.lineWidth=2;ctx.stroke();
+  // Pitch
+  ctx.beginPath();ctx.ellipse(W/2,H/2,W*.25,H*.25,0,0,Math.PI*2);ctx.fillStyle='#1a4a2a';ctx.fill();
+  ctx.strokeStyle='#ffffff22';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.ellipse(W/2,H/2,W*.18,H*.18,0,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(W/2,H/2-H*.25);ctx.lineTo(W/2,H/2+H*.25);ctx.stroke();
+  // Goal areas
+  ctx.fillStyle='#ffffff22';
+  ctx.fillRect(W/2-20,H/2-H*.25,40,8);ctx.fillRect(W/2-20,H/2+H*.25-8,40,8);
+  // Heat blobs
+  Object.values(state.crowdData).forEach(zone=>{
+    const x=(zone.x/100)*W,y=(zone.y/100)*H,r=(zone.r/100)*Math.min(W,H)*.8;
+    const intens=zone.current/100;
+    const grad=ctx.createRadialGradient(x,y,0,x,y,r);
+    const base=intens>.85?'239,68,68':intens>.7?'249,115,22':intens>.4?'245,158,11':'16,185,129';
+    grad.addColorStop(0,`rgba(${base},${intens*.85})`);
+    grad.addColorStop(.5,`rgba(${base},${intens*.35})`);
+    grad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+  });
+  // Cardinal labels
+  ctx.font='bold 11px Inter,sans-serif';ctx.fillStyle='#64748b';ctx.textAlign='center';
+  ctx.fillText('N',W/2,14);ctx.fillText('S',W/2,H-4);ctx.fillText('E',W-5,H/2+4);ctx.fillText('W',10,H/2+4);
+}
+
+function renderZones(){
+  const list=document.getElementById('zones-list');
+  if(!list)return;
+  list.innerHTML=Object.values(state.crowdData).slice(0,8).map(z=>{
+    const c=densityColor(z.current),l=densityLabel(z.current);
+    return`<div class="zone-item"><span class="zone-name">${z.name}</span><div class="zone-bar-wrap"><div class="zone-bar" style="width:${z.current}%;background:${c}"></div></div><div><div class="zone-pct" style="color:${c}">${Math.round(z.current)}%</div><div class="zone-lbl" style="color:${c}">${l}</div></div></div>`;
+  }).join('');
+}
+
+async function runCrowdAI(){
+  const panel=document.getElementById('ai-insight-panel');
+  const content=document.getElementById('insight-content');
+  if(!panel||!content)return;
+  panel.style.display='block';
+  content.innerHTML='<div class="insight-loading"><div class="spinner"></div><span>Analyzing crowd patterns with AI...</span></div>';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  const avgD=Object.values(state.crowdData).reduce((a,z)=>a+z.current,0)/Object.keys(state.crowdData).length;
+  const occ=Math.round((avgD/100)*TOTAL_CAPACITY);
+  const dp=Math.round((occ/TOTAL_CAPACITY)*100);
+  if(state.apiKey){
+    try{
+      const prompt=`As an AI stadium operations analyst for FIFA World Cup 2026, analyze this real-time data and provide a brief 3-bullet operational summary with urgent alerts:\n\nOccupancy: ${fmt(occ)}/${fmt(TOTAL_CAPACITY)} (${dp}%)\nCritical zones: Gate 5 South at 89%, Pitch Level at 95%\nZones: ${Object.values(state.crowdData).map(z=>z.name+': '+Math.round(z.current)+'%').join(', ')}\n\nFormat response as JSON: { "summary": "...", "alerts": ["...","..."], "recommendation": "...", "severity": "low|medium|high" }`;
+      const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`,{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{temperature:.3,maxOutputTokens:512}})
+      });
+      if(r.ok){
+        const d=await r.json();
+        const txt=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+        const jm=txt.match(/\{[\s\S]*\}/);
+        if(jm){
+          const ins=JSON.parse(jm[0]);
+          const sc={'low':'#10b981','medium':'#f59e0b','high':'#ef4444'};
+          const col=sc[ins.severity]||'#3b82f6';
+          content.innerHTML=`<div class="insight-result">
+            <div class="insight-sev" style="background:${col}22;border-color:${col}">Severity: <strong>${(ins.severity||'LOW').toUpperCase()}</strong></div>
+            <div><h4>📊 Summary</h4><p>${ins.summary||''}</p></div>
+            ${ins.alerts?.length?`<div><h4>⚠️ Alerts</h4><ul>${ins.alerts.map(a=>`<li>${a}</li>`).join('')}</ul></div>`:''}
+            ${ins.recommendation?`<div><h4>💡 Recommendation</h4><p>${ins.recommendation}</p></div>`:''}
+          </div>`;
+          return;
         }
-
-        // Update shuttle time
-        const shuttleEl = document.getElementById('kpi-shuttle');
-        if (shuttleEl) {
-          shuttleEl.textContent = `${randomInRange(3, 15)} min`;
-        }
-      }, 5000);
-    }
-
-    // ============ Component Initialization ============
-    function initComponent(page) {
-      if (initializedComponents[page]) return;
-      initializedComponents[page] = true;
-
-      switch (page) {
-        case 'chat':
-          ChatComponent.init(
-            document.getElementById('chat-container'),
-            currentPersona
-          );
-          break;
-        case 'crowd':
-          CrowdComponent.init(document.getElementById('crowd-container'));
-          break;
-        case 'navigation':
-          NavigationComponent.init(document.getElementById('navigation-container'));
-          break;
-        case 'transport':
-          TransportComponent.init(document.getElementById('transport-container'));
-          break;
-        case 'accessibility':
-          AccessibilityComponent.init(document.getElementById('accessibility-container'));
-          break;
-        case 'sustainability':
-          SustainabilityComponent.init(document.getElementById('sustainability-container'));
-          break;
       }
-    }
+    }catch(e){}
+  }
+  // Fallback
+  content.innerHTML=`<div class="insight-result">
+    <div class="insight-sev" style="background:#f59e0b22;border-color:#f59e0b">Severity: <strong>MEDIUM</strong></div>
+    <div><h4>📊 Summary</h4><p>Stadium at ${dp}% capacity. Gate 5 South experiencing above-normal traffic. Crowd flow manageable with minor bottlenecks at south entrance.</p></div>
+    <div><h4>⚠️ Alerts</h4><ul><li>Gate 5 South at 89% — recommend opening additional entry lanes</li><li>Concession queues exceeding 12-minute threshold in Section D</li></ul></div>
+    <div><h4>💡 Recommendation</h4><p>Deploy 4 additional crowd marshals to Gate 5. Activate secondary concession stations in Sections D and F. Send fan notification to use Gate 7 for smoother entry (only 2 min wait).</p></div>
+  </div>`;
+}
 
-    // ============ Navigation ============
-    function bindNavigation() {
-      document.querySelectorAll('.nav-item[data-page]').forEach(btn => {
-        btn.addEventListener('click', () => navigateTo(btn.dataset.page));
-      });
-    }
+// ====== NAVIGATION ======
+function initNavigation(){
+  renderStadiumMap();
+  renderGates();
+  document.getElementById('close-sec-detail')?.addEventListener('click',()=>{document.getElementById('sec-detail').style.display='none';});
+  document.getElementById('close-dir')?.addEventListener('click',()=>{document.getElementById('dir-panel').style.display='none';});
+  let scale=1;
+  document.getElementById('zoom-in')?.addEventListener('click',()=>{scale=Math.min(scale+.2,2.5);const s=document.querySelector('.stadium-svg');if(s)s.style.transform=`scale(${scale})`;});
+  document.getElementById('zoom-out')?.addEventListener('click',()=>{scale=Math.max(scale-.2,.6);const s=document.querySelector('.stadium-svg');if(s)s.style.transform=`scale(${scale})`;});
+  document.getElementById('map-reset')?.addEventListener('click',()=>{scale=1;const s=document.querySelector('.stadium-svg');if(s)s.style.transform='scale(1)';});
+  document.getElementById('nav-search')?.addEventListener('input',e=>handleMapSearch(e.target.value));
+  document.querySelectorAll('.svc-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    btn.classList.toggle('active');
+    showToast('Filtered: '+btn.textContent,'info');
+  }));
+}
 
-    function navigateTo(page) {
-      if (currentPage === page) return;
+function renderStadiumMap(){
+  const container=document.getElementById('stadium-map-svg');
+  if(!container)return;
+  const cx=250,cy=200,rx=210,ry=165,irx=120,iry=95;
+  const angles={A:270,B:315,C:0,D:45,E:90,F:135,G:180,H:225};
+  const sectionArcs=SECTIONS.map(sec=>{
+    const i=SECTIONS.indexOf(sec);
+    const start=(i/SECTIONS.length)*360-90;
+    const end=start+(360/SECTIONS.length);
+    const d=rnd(40,95);
+    const col=densityColor(d);
+    const path=describeArc(cx,cy,rx,ry,irx,iry,start+1,end-1);
+    const lx=cx+(rx+irx)/2*.72*Math.cos(((start+end)/2)*Math.PI/180);
+    const ly=cy+(ry+iry)/2*.72*Math.sin(((start+end)/2)*Math.PI/180);
+    return`<path d="${path}" fill="${col}35" stroke="${col}70" stroke-width="1" data-section="${sec.id}" data-density="${d}" style="cursor:pointer" onclick="showSectionDetail('${sec.id}',${d})"/>
+    <text x="${lx}" y="${ly+4}" text-anchor="middle" fill="${col}" font-size="14" font-weight="bold" style="pointer-events:none">${sec.id}</text>`;
+  }).join('');
+  const gateCircles=GATES.map((gate,i)=>{
+    const a=(i/GATES.length)*360;
+    const x=cx+(rx+15)*Math.cos((a-90)*Math.PI/180);
+    const y=cy+(ry+12)*Math.sin((a-90)*Math.PI/180);
+    const col=gate.queue==='critical'?'#ef4444':'#10b981';
+    return`<g style="cursor:pointer" onclick="showGateDetail(${gate.id})">
+      <circle cx="${x}" cy="${y}" r="10" fill="${col}22" stroke="${col}" stroke-width="1.5"/>
+      <text x="${x}" y="${y+4}" text-anchor="middle" fill="${col}" font-size="9" font-weight="bold">${gate.id}</text>
+    </g>`;
+  }).join('');
+  container.innerHTML=`<svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg" class="stadium-svg" width="100%">
+    <rect width="500" height="400" fill="#060d1a"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+    ${sectionArcs}
+    <ellipse cx="${cx}" cy="${cy}" rx="${irx}" ry="${iry}" fill="#0f1f2e" stroke="#1e40af" stroke-width="1.5"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="85" ry="68" fill="#1a4a2a" stroke="#22543d" stroke-width="1"/>
+    <line x1="${cx-85}" y1="${cy}" x2="${cx+85}" y2="${cy}" stroke="#ffffff18" stroke-width="1"/>
+    <ellipse cx="${cx}" cy="${cy}" rx="28" ry="22" fill="none" stroke="#ffffff18" stroke-width="1"/>
+    <circle cx="${cx}" cy="${cy}" r="4" fill="#ffffff25"/>
+    <rect x="${cx-12}" y="${cy-68}" width="24" height="6" fill="#ffffff18" rx="2"/>
+    <rect x="${cx-12}" y="${cy+62}" width="24" height="6" fill="#ffffff18" rx="2"/>
+    ${gateCircles}
+    <text x="${cx}" y="14" text-anchor="middle" fill="#475569" font-size="10">NORTH</text>
+    <text x="${cx}" y="392" text-anchor="middle" fill="#475569" font-size="10">SOUTH</text>
+    <text x="488" y="${cy+4}" text-anchor="end" fill="#475569" font-size="10">EAST</text>
+    <text x="12" y="${cy+4}" text-anchor="start" fill="#475569" font-size="10">WEST</text>
+    <g>
+      <circle cx="${cx+60}" cy="${cy}" r="8" fill="#3b82f6" stroke="#fff" stroke-width="2"/>
+      <text x="${cx+60}" y="${cy+4}" text-anchor="middle" fill="#fff" font-size="7" font-weight="bold">YOU</text>
+    </g>
+  </svg>`;
+}
 
-      // Update nav items
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-        item.removeAttribute('aria-current');
-      });
+function describeArc(cx,cy,rx,ry,irx,iry,startA,endA){
+  const p2c=(cx,cy,rx,ry,a)=>({x:cx+rx*Math.cos(a*Math.PI/180),y:cy+ry*Math.sin(a*Math.PI/180)});
+  const s=p2c(cx,cy,rx,ry,startA),e=p2c(cx,cy,rx,ry,endA);
+  const is_=p2c(cx,cy,irx,iry,endA),ie=p2c(cx,cy,irx,iry,startA);
+  const la=endA-startA>180?1:0;
+  return`M ${s.x} ${s.y} A ${rx} ${ry} 0 ${la} 1 ${e.x} ${e.y} L ${is_.x} ${is_.y} A ${irx} ${iry} 0 ${la} 0 ${ie.x} ${ie.y} Z`;
+}
 
-      const activeNav = document.getElementById(`nav-${page}`);
-      if (activeNav) {
-        activeNav.classList.add('active');
-        activeNav.setAttribute('aria-current', 'page');
-      }
+function renderGates(){
+  const list=document.getElementById('gates-list');
+  if(!list)return;
+  const qc={short:'#10b981',medium:'#f59e0b',long:'#f97316',critical:'#ef4444'};
+  list.innerHTML=GATES.map(g=>`<div class="gate-item" onclick="showGateDetail(${g.id})">
+    <span class="gate-dot" style="background:${g.queue==='critical'?'#ef4444':'#10b981'}"></span>
+    <div><div class="gate-name">${g.name}</div><div class="gate-svc" style="font-size:9px;color:#475569">${g.services.join(' · ')}</div></div>
+    <div style="text-align:right"><div class="wait-t" style="color:${qc[g.queue]}">${g.wait}m</div><div class="wait-l">wait</div></div>
+  </div>`).join('');
+}
 
-      // Hide all sections
-      document.querySelectorAll('.page-section').forEach(s => {
-        s.classList.remove('active');
-      });
+window.showSectionDetail=function(secId,density){
+  const sec=SECTIONS.find(s=>s.id===secId);
+  if(!sec)return;
+  const detail=document.getElementById('sec-detail');
+  const content=document.getElementById('sec-detail-content');
+  if(!detail||!content)return;
+  const col=densityColor(density),lbl=densityLabel(density);
+  content.innerHTML=`<div class="sec-hdr"><span class="sec-badge" style="background:${col}18;color:${col};border-color:${col}">Section ${sec.id}</span><span style="font-size:11px;font-weight:600;color:${col}">${lbl} (${density}%)</span></div>
+  <div class="meta-grid">
+    <div class="meta-item"><span class="meta-lbl">Gate</span><span class="meta-val">Gate ${sec.gate}</span></div>
+    <div class="meta-item"><span class="meta-lbl">Level</span><span class="meta-val">${sec.level}</span></div>
+    <div class="meta-item"><span class="meta-lbl">Type</span><span class="meta-val">${sec.type.charAt(0).toUpperCase()+sec.type.slice(1)}</span></div>
+    <div class="meta-item"><span class="meta-lbl">Capacity</span><span class="meta-val">${fmt(sec.cap)}</span></div>
+  </div>
+  <div class="sec-svcs"><h4>Services</h4><ul>${sec.services.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+  <div class="sec-dir"><h4>How to Get There</h4><p>Enter through <strong>Gate ${sec.gate}</strong>. Follow signs to <strong>${sec.level} Level</strong>. ${sec.type==='accessible'?'♿ Full wheelchair access available.':''}</p></div>
+  ${density>=80?'<div class="alert-callout">⚠️ This section is busy. Consider entering via Gate '+(sec.gate===5?7:sec.gate+1)+' for shorter queue.</div>':''}
+  <button class="btn-navigate" onclick="showDirections('${sec.id}')">🧭 Get Directions</button>`;
+  detail.style.display='block';
+};
 
-      // Show target section
-      const targetSection = document.getElementById(`page-${page}`);
-      if (targetSection) targetSection.classList.add('active');
+window.showGateDetail=function(gateId){
+  const gate=GATES.find(g=>g.id===gateId);
+  if(!gate)return;
+  const detail=document.getElementById('sec-detail');
+  const content=document.getElementById('sec-detail-content');
+  if(!detail||!content)return;
+  const qc={short:'#10b981',medium:'#f59e0b',long:'#f97316',critical:'#ef4444'};
+  const col=qc[gate.queue];
+  content.innerHTML=`<div class="sec-hdr"><span class="sec-badge" style="background:${col}18;color:${col};border-color:${col}">Gate ${gate.id}</span><span style="font-size:11px;font-weight:600;color:${col}">~${gate.wait} min wait</span></div>
+  <div class="meta-grid">
+    <div class="meta-item"><span class="meta-lbl">Status</span><span class="meta-val" style="color:${gate.queue==='critical'?'#ef4444':'#10b981'}">${gate.queue==='critical'?'BUSY':'OPEN'}</span></div>
+    <div class="meta-item"><span class="meta-lbl">Queue</span><span class="meta-val" style="color:${col}">${gate.queue.toUpperCase()}</span></div>
+  </div>
+  <div class="sec-svcs"><h4>Services</h4><ul>${gate.services.map(s=>`<li>${s}</li>`).join('')}</ul></div>
+  ${gate.queue==='critical'?'<div class="alert-callout">⚠️ Gate 5 is extremely busy. Use <strong>Gate 7 (West)</strong> for faster entry — only 2 min wait!</div>':''}`;
+  detail.style.display='block';
+};
 
-      // Update breadcrumb
-      const breadcrumb = document.getElementById('breadcrumb-current');
-      if (breadcrumb) {
-        const pageNames = {
-          dashboard: 'Dashboard',
-          chat: 'AI Assistant',
-          crowd: 'Crowd Management',
-          navigation: 'Navigation',
-          transport: 'Transportation',
-          accessibility: 'Accessibility',
-          sustainability: 'Eco Tracker'
-        };
-        breadcrumb.textContent = pageNames[page] || page;
-      }
+window.showDirections=function(secId){
+  const sec=SECTIONS.find(s=>s.id===secId);
+  if(!sec)return;
+  const panel=document.getElementById('dir-panel');
+  const content=document.getElementById('dir-content');
+  if(!panel||!content)return;
+  const dirs={1:'North',2:'Northeast',3:'East',4:'Southeast',5:'South',6:'Southwest',7:'West',8:'Northwest'};
+  const steps=['Enter through <strong>Gate '+sec.gate+'</strong> on the '+dirs[sec.gate]+' side','Pass through security screening (Est. '+rnd(2,8)+' min wait)','Follow signs for <strong>'+sec.level+' Level</strong>'];
+  if(sec.level==='Upper')steps.push('Take elevator or stairs to upper deck');
+  steps.push('Find <strong>Section '+secId+'</strong> — look for large section markers');
+  content.innerHTML=`<div class="dir-steps">${steps.map((s,i)=>`<div class="dir-step"><span class="step-num">${i+1}</span>${s}</div>`).join('')}<div class="dir-step success">✅ You've arrived! Enjoy the match!</div></div>${sec.type==='accessible'?'<div class="acc-note">♿ Wheelchair access at all levels. Staff assistance at Gate '+sec.gate+'. Hearing loops active in this section.</div>':''}`;
+  panel.style.display='block';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+};
 
-      currentPage = page;
+function handleMapSearch(q){
+  if(!q)return;
+  const uq=q.toUpperCase().replace('SECTION','').trim();
+  const sec=SECTIONS.find(s=>s.id===uq);
+  if(sec)showSectionDetail(sec.id,rnd(40,90));
+}
 
-      // Initialize component on first visit
-      initComponent(page);
+// ====== TRANSPORT ======
+function initTransport(){
+  renderShuttles();
+  renderMetro();
+  renderParking();
+  state.transInterval=setInterval(()=>{
+    SHUTTLES.forEach(s=>{s.nextIn=Math.max(1,s.nextIn-1);if(s.nextIn<=0)s.nextIn=s.freq;s.occ=Math.min(s.cap,Math.max(0,s.occ+rnd(-2,3)));});
+    METRO.forEach(m=>{m.next=Math.max(1,m.next-1);if(m.next<=0)m.next=rnd(5,20);});
+    renderShuttles();renderMetro();
+    const re=document.getElementById('t-rideshare');if(re)re.textContent='~'+rnd(8,18)+'m';
+    const ue=document.getElementById('uber-wait');if(ue)ue.textContent='~'+rnd(5,15)+' min';
+    const le=document.getElementById('lyft-wait');if(le)le.textContent='~'+rnd(8,20)+' min';
+  },5000);
+  document.getElementById('refresh-park')?.addEventListener('click',()=>{PARKING.forEach(p=>{if(p.avail>0)p.avail=Math.max(0,p.avail+rnd(-40,20));});renderParking();showToast('Parking refreshed','success');});
+  document.getElementById('plan-btn')?.addEventListener('click',planJourney);
+}
 
-      // Close mobile sidebar
-      closeMobileSidebar();
-    }
+function renderShuttles(){
+  const list=document.getElementById('shuttle-list');
+  if(!list)return;
+  list.innerHTML=SHUTTLES.map(s=>{
+    const p=Math.round((s.occ/s.cap)*100);
+    const c=p>=100?'#ef4444':p>=80?'#f59e0b':'#10b981';
+    const lbl=p>=100?'Full':p>=80?'Nearly Full':'Available';
+    const nc=s.nextIn<=5?'#10b981':s.nextIn<=15?'#f59e0b':'#64748b';
+    return`<div class="shuttle-item">
+      <div class="sh-icon" style="background:${s.color}22;color:${s.color}">${s.icon}</div>
+      <div class="sh-info"><div class="sh-name">${s.name}</div><div class="sh-stops">${s.stops[0]} → ${s.stops[s.stops.length-1]}</div><div class="sh-freq">Every ${s.freq} min</div></div>
+      <div class="sh-status"><div class="sh-next"><span class="next-bus" style="color:${nc}">${s.nextIn}m</span><span class="next-bus-lbl">next</span></div><div class="cap-bar-wrap"><div class="cap-bar" style="width:${p}%;background:${c}"></div></div><span class="sh-cap-txt" style="color:${c}">${lbl} (${s.occ}/${s.cap})</span></div>
+    </div>`;
+  }).join('');
+}
 
-    // ============ Persona Switcher ============
-    function bindPersonaSwitcher() {
-      document.querySelectorAll('.persona-btn[data-persona]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const persona = btn.dataset.persona;
-          switchPersona(persona);
-        });
-      });
-    }
+function renderMetro(){
+  const list=document.getElementById('metro-list');
+  if(!list)return;
+  list.innerHTML=METRO.map(m=>`<div class="metro-item">
+    <div class="metro-ind" style="background:${m.color}"></div>
+    <div class="metro-info"><div class="metro-nm">${m.name}</div><div class="metro-dir">${m.dir}</div><div class="metro-plat">${m.plat}</div></div>
+    <div style="text-align:right"><span class="next-t" style="color:${m.color}">${m.next} min</span><span class="next-lbl">next</span></div>
+  </div>`).join('');
+}
 
-    function switchPersona(persona) {
-      currentPersona = persona;
-      window.currentPersona = persona;
+function renderParking(){
+  const grid=document.getElementById('parking-grid');
+  if(!grid)return;
+  grid.innerHTML=PARKING.map(p=>{
+    const pct=Math.round(((p.total-p.avail)/p.total)*100);
+    const c=p.avail===0?'#ef4444':pct>80?'#f59e0b':'#10b981';
+    const lbl=p.avail===0?'FULL':pct>80?'Limited':'Available';
+    return`<div class="park-card">
+      <div class="park-hdr"><span class="park-name">${p.name}</span><span class="park-price">${p.price}</span></div>
+      <div class="park-meter"><div class="meter-fill" style="width:${pct}%;background:${c}"></div></div>
+      <div style="display:flex;justify-content:space-between">
+        <span class="park-avail" style="color:${c}">${p.avail===0?'FULL':fmt(p.avail)}</span>
+        <span class="park-status" style="color:${c}">${lbl}</span>
+      </div>
+      <div class="park-meta">📍 ${p.dist} walk &nbsp; ♿ ${p.accessible} spaces</div>
+      ${p.avail===0?'<div class="park-full-note">Try Lot C or Lot A</div>':''}
+    </div>`;
+  }).join('');
+}
 
-      // Update UI
-      document.querySelectorAll('.persona-btn').forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-pressed', 'false');
-      });
+function planJourney(){
+  const from=document.getElementById('journey-from')?.value.trim();
+  if(!from){showToast('Enter your starting location','warning');return;}
+  const mode=document.querySelector('input[name="tmode"]:checked')?.value||'transit';
+  const routes={
+    transit:{steps:[`🚶 Travel to nearest transit hub from ${from}`,'🚆 Board NJ Transit Meadowlands Line','⏱️ ~35 min journey to Meadowlands Station','🚶 5-minute walk to MetLife Stadium Gate 1'],time:'45 min',cost:'$4.25',note:'Most eco-friendly option ♻️'},
+    shuttle:{steps:[`🚗 Travel to shuttle pickup at Penn Station from ${from}`,'🚌 Board MetLife Express Shuttle (every 15 min)','⏱️ ~25 min direct ride to stadium','🏟️ Drops at Gate 1 Main Entrance'],time:'35 min',cost:'$8.00',note:'Pre-book recommended during peak hours'},
+    drive:{steps:[`🚗 Navigate to NJ-3 East from ${from}`,'🛣️ Follow signs to MetLife Stadium / Meadowlands','🅿️ Parking available in Lots A, B, C','🚶 Walk from parking to stadium entrance'],time:'30-60 min',cost:'$40-120',note:'⚠️ Expect heavy traffic 2 hours before kickoff'},
+    accessible:{steps:[`♿ Accessible transit available from ${from}`,'🚌 Accessible shuttle with ramp — every 20 min','🏟️ Arrive at Gate 2 (fully accessible)','♿ Stadium mobility assistance on request'],time:'40 min',cost:'Free for mobility aid users',note:'Book via accessibility hotline: +1 (555) FIFA-ADA'}
+  };
+  const r=routes[mode];
+  const result=document.getElementById('journey-result');
+  if(!result)return;
+  result.style.display='block';
+  result.innerHTML=`<div class="journey-plan">
+    <div class="j-summary"><span>⏱️ ${r.time}</span><span>💰 ${r.cost}</span></div>
+    <ol class="j-steps">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    <div class="j-note">💡 ${r.note}</div>
+  </div>`;
+}
 
-      const activeBtn = document.getElementById(`persona-${persona}`);
-      if (activeBtn) {
-        activeBtn.classList.add('active');
-        activeBtn.setAttribute('aria-pressed', 'true');
-      }
+// ====== ACCESSIBILITY ======
+let fontSize=16,highContrast=false;
 
-      // Update Gemini API persona
-      GeminiAPI.setPersona(persona);
+function initAccessibility(){
+  // Render features
+  const feat=document.getElementById('acc-features');
+  if(feat)feat.innerHTML=ACC_FEATURES.map(f=>`<div class="acc-feat-card">
+    <div class="feat-icon-wrap" style="background:${f.color}18"><span class="feat-icon">${f.icon}</span></div>
+    <div>
+      <div class="feat-title">${f.title}</div>
+      <div class="feat-desc">${f.desc}</div>
+      <div class="feat-locs">${f.locs.map(l=>`<span class="loc-tag">${l}</span>`).join('')}</div>
+    </div>
+    <div class="feat-status"><span class="status-dot-available"></span><span class="status-txt">Available</span></div>
+  </div>`).join('');
+  // Render routes
+  const routes=document.getElementById('routes-grid');
+  if(routes)routes.innerHTML=ACC_ROUTES.map((r,i)=>`<div class="route-card">
+    <div class="route-hdr"><div><div class="route-from">📍 ${r.from}</div><div class="route-to">🏟️ ${r.to}</div></div><span class="route-time">⏱️ ~${r.time}</span></div>
+    <ol class="route-steps-list">${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+    <button class="btn-speak-route" onclick="speakRoute(${i})">🔊 Read Directions</button>
+  </div>`).join('');
+  // Bind buttons
+  document.getElementById('font-dec')?.addEventListener('click',()=>{fontSize=Math.max(12,fontSize-2);document.documentElement.style.fontSize=fontSize+'px';storeSet('sq_fontsize',fontSize);showToast('Font: '+fontSize+'px','info');});
+  document.getElementById('font-inc')?.addEventListener('click',()=>{fontSize=Math.min(24,fontSize+2);document.documentElement.style.fontSize=fontSize+'px';storeSet('sq_fontsize',fontSize);showToast('Font: '+fontSize+'px','info');});
+  document.getElementById('high-contrast-btn')?.addEventListener('click',()=>{
+    highContrast=!highContrast;document.body.classList.toggle('high-contrast',highContrast);
+    document.getElementById('high-contrast-btn').classList.toggle('active',highContrast);
+    storeSet('sq_contrast',highContrast);showToast(highContrast?'High contrast ON':'High contrast OFF','info');
+  });
+  document.getElementById('read-aloud-btn')?.addEventListener('click',()=>{
+    speak(`StadiumIQ Accessibility Summary. ${ACC_FEATURES.length} features active: ${ACC_FEATURES.map(f=>f.title).join(', ')}. For assistance call plus 1 555 FIFA ADA.`);
+    showToast('Reading accessibility info...','info');
+  });
+  document.getElementById('keyboard-nav-btn')?.addEventListener('click',()=>{showToast('Tab: Navigate | Enter: Activate | Esc: Close | Arrow keys: Scroll','info',5000);});
+  document.getElementById('reset-access-btn')?.addEventListener('click',()=>{fontSize=16;highContrast=false;document.documentElement.style.fontSize='16px';document.body.classList.remove('high-contrast');document.getElementById('high-contrast-btn').classList.remove('active');storeSet('sq_fontsize',16);storeSet('sq_contrast',false);showToast('Settings reset','success');});
+  document.getElementById('btn-escort')?.addEventListener('click',()=>showToast('Escort request sent! Staff will arrive in 5 minutes.','success',5000));
+  document.getElementById('btn-wheelchair')?.addEventListener('click',()=>showToast('Wheelchair service requested! Wait at your current gate.','success',5000));
+  document.getElementById('btn-interpreter')?.addEventListener('click',()=>showToast('Sign language interpreter requested! Available in 10 min.','success',5000));
+  document.getElementById('btn-emrg')?.addEventListener('click',()=>showToast('🚨 Emergency assistance dispatched! Help is on the way.','error',8000));
+}
 
-      // Update chat if it was initialized
-      if (initializedComponents['chat']) {
-        ChatComponent.updatePersona(persona);
-      }
+window.speakRoute=function(i){
+  const r=ACC_ROUTES[i];
+  if(!r)return;
+  speak(`Directions from ${r.from} to ${r.to}. Estimated time: ${r.time}. Steps: ${r.steps.join('. ')}`);
+  showToast('Reading route directions...','info');
+};
 
-      // Save preference
-      storage.set('stadiumiq_persona', persona);
+// ====== SUSTAINABILITY ======
+let ecoData={carbon:142.5,plastic:15200,trees:284,renewable:65,solarOut:8.4,evChg:42};
+let tipIdx=0;
 
-      showToast(`Switched to ${persona.charAt(0).toUpperCase() + persona.slice(1)} mode`, 'success');
-    }
+function initSustainability(){
+  renderEcoInitiatives();
+  drawEnergyDonut();
+  renderTips();
+  renderTipDots();
+  document.getElementById('tip-prev')?.addEventListener('click',()=>{tipIdx=(tipIdx-1+ECO_TIPS.length)%ECO_TIPS.length;updateTip();});
+  document.getElementById('tip-next')?.addEventListener('click',()=>{tipIdx=(tipIdx+1)%ECO_TIPS.length;updateTip();});
+  setInterval(()=>{tipIdx=(tipIdx+1)%ECO_TIPS.length;updateTip();},6000);
+  document.getElementById('pledge-btn')?.addEventListener('click',handlePledge);
+  state.ecoInterval=setInterval(()=>{
+    ecoData.carbon=Math.round((ecoData.carbon+rnd(0,3)*.1)*10)/10;
+    ecoData.plastic+=rnd(5,20);
+    ecoData.trees=Math.round(ecoData.carbon*2);
+    ecoData.solarOut=Math.round((ecoData.solarOut+rnd(-2,3)*.05)*10)/10;
+    ecoData.evChg=Math.min(42,Math.max(30,ecoData.evChg+rnd(-1,2)));
+    const ce=document.getElementById('eco-carbon');if(ce)ce.textContent=ecoData.carbon;
+    const pe=document.getElementById('eco-plastic');if(pe)pe.textContent=fmt(ecoData.plastic);
+    const te=document.getElementById('eco-trees');if(te)te.textContent=ecoData.trees;
+    const se=document.getElementById('solar-out');if(se)se.textContent=ecoData.solarOut+' MWh';
+    const ee=document.getElementById('ev-chg');if(ee)ee.textContent=ecoData.evChg;
+  },4000);
+}
 
-    function updatePersonaUI(persona) {
-      document.querySelectorAll('.persona-btn').forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-pressed', 'false');
-      });
+function renderEcoInitiatives(){
+  const grid=document.getElementById('eco-initiatives');
+  if(!grid)return;
+  grid.innerHTML=ECO_INITIATIVES.map(init=>`<div class="eco-init-card">
+    <div class="init-icon-wrap" style="background:${init.color}18"><span class="init-icon">${init.icon}</span></div>
+    <div style="flex:1">
+      <div class="init-title">${init.title}</div>
+      <span class="init-val" style="color:${init.color}">${init.val}</span>
+      <div class="init-desc">${init.desc}</div>
+      <div class="init-prog-bar"><div class="init-prog-fill" style="width:${init.prog}%;background:${init.color}"></div></div>
+      <div class="init-prog-txt">${init.prog}% of ${init.target}</div>
+    </div>
+  </div>`).join('');
+}
 
-      const activeBtn = document.getElementById(`persona-${persona}`);
-      if (activeBtn) {
-        activeBtn.classList.add('active');
-        activeBtn.setAttribute('aria-pressed', 'true');
-      }
-    }
+function drawEnergyDonut(){
+  const canvas=document.getElementById('energy-donut');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const cx=90,cy=90,r=68,sw=24;
+  const segs=[{p:65,c:'#f59e0b'},{p:15,c:'#3b82f6'},{p:10,c:'#10b981'},{p:10,c:'#475569'}];
+  ctx.clearRect(0,0,180,180);
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle='#1e293b';ctx.lineWidth=sw;ctx.stroke();
+  let curA=-Math.PI/2;
+  segs.forEach(seg=>{
+    const a=(seg.p/100)*Math.PI*2;
+    ctx.beginPath();ctx.arc(cx,cy,r,curA,curA+a);ctx.strokeStyle=seg.c;ctx.lineWidth=sw;ctx.stroke();
+    curA+=a;
+  });
+  ctx.fillStyle='#f8fafc';ctx.font='bold 20px Outfit,sans-serif';ctx.textAlign='center';
+  ctx.fillText('90%',cx,cy-4);
+  ctx.fillStyle='#94a3b8';ctx.font='11px Inter,sans-serif';
+  ctx.fillText('Renewable',cx,cy+14);
+}
 
-    // ============ Settings ============
-    function bindSettings() {
-      const settingsBtn = document.getElementById('settings-btn');
-      const overlay = document.getElementById('settings-overlay');
-      const cancelBtn = document.getElementById('settings-cancel');
-      const saveBtn = document.getElementById('settings-save');
-      const langSelector = document.getElementById('lang-selector');
+function renderTips(){
+  const el=document.getElementById('eco-tip');
+  if(el)el.textContent=ECO_TIPS[tipIdx];
+}
 
-      settingsBtn?.addEventListener('click', () => {
-        overlay.classList.add('open');
-        document.getElementById('api-key-input').focus();
-      });
+function renderTipDots(){
+  const dotsEl=document.getElementById('tip-dots');
+  if(!dotsEl)return;
+  dotsEl.innerHTML=ECO_TIPS.map((_,i)=>`<span class="tip-dot ${i===tipIdx?'active':''}" onclick="setTip(${i})"></span>`).join('');
+}
 
-      cancelBtn?.addEventListener('click', () => overlay.classList.remove('open'));
+window.setTip=function(i){tipIdx=i;updateTip();};
 
-      overlay?.addEventListener('click', (e) => {
-        if (e.target === overlay) overlay.classList.remove('open');
-      });
+function updateTip(){
+  const el=document.getElementById('eco-tip');
+  if(el){el.style.opacity='0';setTimeout(()=>{el.textContent=ECO_TIPS[tipIdx];el.style.opacity='1';},200);}
+  document.querySelectorAll('.tip-dot').forEach((d,i)=>d.classList.toggle('active',i===tipIdx));
+}
 
-      // Escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') overlay.classList.remove('open');
-      });
+function handlePledge(){
+  const pledges=['transit','plastic','water','food'].filter(p=>document.getElementById('pledge-'+p)?.checked);
+  if(!pledges.length){showToast('Select at least one pledge option','warning');return;}
+  const count=document.getElementById('pledge-count');
+  if(count){const c=parseInt(count.textContent.replace(/,/g,''));count.textContent=fmt(c+1);}
+  const result=document.getElementById('pledge-result');
+  if(result){
+    result.style.display='block';
+    result.innerHTML=`<div class="pledge-success"><span class="pledge-success-icon">🎉</span><div><strong>Thank you for pledging!</strong><p>You committed to: ${pledges.join(', ')}. Together we make FIFA World Cup 2026 greener! 🌍</p></div></div>`;
+  }
+}
 
-      saveBtn?.addEventListener('click', saveSettings);
+// ====== INIT ALL BINDINGS ======
+function bindAll(){
+  // Nav items
+  document.querySelectorAll('.nav-item[data-page]').forEach(btn=>btn.addEventListener('click',()=>navigateTo(btn.dataset.page)));
+  // Persona buttons
+  document.querySelectorAll('.persona-btn[data-persona]').forEach(btn=>btn.addEventListener('click',()=>switchPersona(btn.dataset.persona)));
+  // Settings
+  document.getElementById('settings-btn')?.addEventListener('click',openSettings);
+  document.getElementById('set-cancel')?.addEventListener('click',closeSettings);
+  document.getElementById('set-save')?.addEventListener('click',saveSettings);
+  document.getElementById('settings-overlay')?.addEventListener('click',e=>{if(e.target===document.getElementById('settings-overlay'))closeSettings();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings();});
+  // Language
+  document.getElementById('lang-sel')?.addEventListener('change',e=>{state.lang=e.target.value;document.getElementById('set-lang').value=e.target.value;storeSet('sq_lang',e.target.value);showToast('Language: '+e.target.value.toUpperCase(),'info');});
+  // Chat
+  document.getElementById('send-btn')?.addEventListener('click',sendMessage);
+  document.getElementById('chat-inp')?.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+  document.getElementById('chat-inp')?.addEventListener('input',function(){
+    this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';
+    const c=document.getElementById('char-ctr');if(c)c.textContent=this.value.length+'/1000';
+  });
+  document.getElementById('chat-clear')?.addEventListener('click',()=>{clearChat();showToast('Chat cleared','success');});
+  document.getElementById('chat-speak-toggle')?.addEventListener('click',()=>{
+    state.voiceEnabled=!state.voiceEnabled;storeSet('sq_speak',state.voiceEnabled);
+    showToast(state.voiceEnabled?'Voice ON':'Voice OFF','info');
+  });
+  // Mic
+  document.getElementById('mic-btn')?.addEventListener('click',handleMic);
+  // Mobile
+  document.getElementById('ham-btn')?.addEventListener('click',()=>{
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('open');
+  });
+  document.getElementById('sidebar-overlay')?.addEventListener('click',closeMobileSidebar);
+}
 
-      langSelector?.addEventListener('change', (e) => {
-        changeLanguage(e.target.value);
-        document.getElementById('settings-lang').value = e.target.value;
-      });
+function handleMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('Voice input not supported in this browser','warning');return;}
+  const r=new SR();r.interimResults=false;
+  const btn=document.getElementById('mic-btn');
+  if(btn){btn.textContent='🔴';btn.classList.add('rec');}
+  r.onresult=e=>{
+    const t=e.results[0][0].transcript;
+    const inp=document.getElementById('chat-inp');
+    if(inp)inp.value=t;
+    if(btn){btn.textContent='🎤';btn.classList.remove('rec');}
+    sendMessage();
+  };
+  r.onerror=()=>{
+    if(btn){btn.textContent='🎤';btn.classList.remove('rec');}
+    showToast('Voice error. Please try again.','error');
+  };
+  r.start();
+}
 
-      document.getElementById('settings-lang')?.addEventListener('change', (e) => {
-        document.getElementById('lang-selector').value = e.target.value;
-      });
-    }
+// ====== BOOT ======
+function boot(){
+  loadSettings();
+  bindAll();
+  initDashboard();
+  initChat();
+  window['_init_chat']=true;
+  window['_init_dashboard']=true;
+}
 
-    function saveSettings() {
-      const apiKey = document.getElementById('api-key-input').value.trim();
-      const lang = document.getElementById('settings-lang').value;
-      const persona = document.getElementById('settings-persona').value;
-      const speak = document.getElementById('settings-speak').checked;
-
-      // Save API key
-      if (apiKey) {
-        storage.set('stadiumiq_api_key', apiKey);
-        GeminiAPI.init(apiKey, persona, lang);
-        showToast('✅ API key saved! Full AI mode enabled.', 'success');
-      } else {
-        storage.remove('stadiumiq_api_key');
-        showToast('ℹ️ Running in demo mode (no API key)', 'info');
-      }
-
-      // Save other settings
-      storage.set('stadiumiq_lang', lang);
-      storage.set('stadiumiq_persona', persona);
-      storage.set('stadiumiq_speak', speak);
-
-      changeLanguage(lang);
-      switchPersona(persona);
-
-      document.getElementById('settings-overlay').classList.remove('open');
-    }
-
-    function changeLanguage(lang) {
-      i18n.setLanguage(lang);
-      GeminiAPI.setLanguage(lang);
-      storage.set('stadiumiq_lang', lang);
-      document.getElementById('lang-selector').value = lang;
-      showToast(`Language: ${lang.toUpperCase()}`, 'info');
-    }
-
-    // ============ Mobile ============
-    function bindMobile() {
-      const hamburger = document.getElementById('hamburger-btn');
-      const sidebarOverlay = document.getElementById('sidebar-overlay');
-
-      hamburger?.addEventListener('click', () => {
-        const sidebar = document.getElementById('sidebar');
-        const isOpen = sidebar.classList.toggle('open');
-        hamburger.setAttribute('aria-expanded', isOpen.toString());
-        sidebarOverlay.style.display = isOpen ? 'block' : 'none';
-      });
-
-      sidebarOverlay?.addEventListener('click', closeMobileSidebar);
-    }
-
-    function closeMobileSidebar() {
-      document.getElementById('sidebar')?.classList.remove('open');
-      document.getElementById('sidebar-overlay').style.display = 'none';
-      document.getElementById('hamburger-btn')?.setAttribute('aria-expanded', 'false');
-    }
-
-    // ============ Boot ============
-    document.addEventListener('DOMContentLoaded', init);
-  </script>
+document.addEventListener('DOMContentLoaded',boot);
+</script>
 </body>
 </html>
