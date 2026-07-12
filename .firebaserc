@@ -1,5 +1,7 @@
 {
-  "projects": {},
+  "projects": {
+    "default": "ecotrack-kul25"
+  },
   "targets": {},
   "etags": {}
 }

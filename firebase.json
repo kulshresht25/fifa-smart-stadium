@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "fifa-smartstadium-2026",
     "public": "public",
     "ignore": [
       "firebase.json",
