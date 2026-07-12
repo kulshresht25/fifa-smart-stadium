@@ -578,11 +578,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         </div>
         <div class="panel" style="background:linear-gradient(135deg,#0d1b2a,#1a2740);border-color:rgba(139,92,246,.3)">
           <div class="panel-hdr"><h3>🤖 AI Operational Summary</h3></div>
-          <div style="display:flex;flex-direction:column;gap:9px">
-            <div style="padding:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:9px;font-size:12px">🚨 <strong>Gate 5 at 89% capacity</strong> — redirect signage activated</div>
-            <div style="padding:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:9px;font-size:12px">⚠️ <strong>Concession bottleneck</strong> — open Section D stand recommended</div>
-            <div style="padding:10px;background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:9px;font-size:12px">✅ <strong>All accessibility services</strong> operational — 0 pending requests</div>
-            <div style="padding:10px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.3);border-radius:9px;font-size:12px">ℹ️ <strong>Solar output: 8.4 MWh</strong> — 65% of energy from renewables</div>
+          <div id="dash-ai-content" style="display:flex;flex-direction:column;gap:9px">
+            <!-- Populated dynamically on load -->
           </div>
         </div>
       </div>
@@ -613,7 +610,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
           </div>
         </div>
         <div class="sugg-bar" id="sugg-bar"></div>
-        <div class="chat-msgs" id="chat-msgs"></div>
+        <div class="chat-msgs" id="chat-msgs" role="log" aria-live="polite" aria-label="Chat conversation"></div>
         <div class="typing-ind" id="typing-ind">
           <div class="typing-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>
           <span class="typing-lbl">StadiumIQ is thinking...</span>
@@ -1060,7 +1057,7 @@ const getMsgTime = () => new Date().toLocaleTimeString('en-US',{hour:'2-digit',m
 
 function showToast(msg,type='info',dur=3000){
   const c=document.getElementById('toast-container');
-  const colors={info:'#3b82f6',success:'#10b981',warning:'f59e0b',error:'#ef4444'};
+  const colors={info:'#3b82f6',success:'#10b981',warning:'#f59e0b',error:'#ef4444'};
   const icons={info:'ℹ️',success:'✅',warning:'⚠️',error:'❌'};
   const t=document.createElement('div');
   t.style.cssText=`padding:11px 16px;border-radius:10px;color:#fff;background:${colors[type]||colors.info};font-size:13px;font-weight:500;box-shadow:0 4px 18px rgba(0,0,0,.3);animation:fadeIn .3s ease;max-width:280px;display:flex;align-items:center;gap:7px;font-family:Inter,sans-serif`;
