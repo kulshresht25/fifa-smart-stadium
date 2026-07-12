@@ -38,6 +38,7 @@ yarn.lock
 # Build outputs (if added later)
 dist/
 build/
+public/
 
 # OS-specific
 $RECYCLE.BIN/
