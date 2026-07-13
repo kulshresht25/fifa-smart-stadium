@@ -35,10 +35,17 @@ node_modules/
 package-lock.json
 yarn.lock
 
-# Build outputs (if added later)
+# Build outputs
 dist/
 build/
-public/
+
+# Test outputs
+coverage/
+playwright-report/
+test-results/
+
+# Vite cache
+.vite/
 
 # OS-specific
 $RECYCLE.BIN/

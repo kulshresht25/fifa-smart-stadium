@@ -1,6 +1,11 @@
 /**
  * StadiumIQ — Utility Helpers
+ *
  * Common utility functions for FIFA World Cup 2026 stadium operations.
+ * Imported by all components — keep this module free of DOM side-effects
+ * so it can be safely tested in a Node/jsdom environment.
+ *
+ * @module utils/helpers
  */
 
 /**
@@ -50,7 +55,16 @@ export function randomInRange(min, max) {
 }
 
 /**
- * Calculate crowd density color
+ * Maps a crowd density percentage to a traffic-light colour.
+ *
+ * Thresholds:
+ * - < 40 % → green  (#10b981) — Low
+ * - < 70 % → amber  (#f59e0b) — Moderate
+ * - < 85 % → orange (#f97316) — High
+ * - ≥ 85 % → red    (#ef4444) — Critical
+ *
+ * @param {number} percent - Density value in the range [0, 100]
+ * @returns {string} CSS hex colour string
  */
 export function densityColor(percent) {
   if (percent < 40) return '#10b981'; // green
@@ -60,13 +74,48 @@ export function densityColor(percent) {
 }
 
 /**
- * Calculate density label
+ * Maps a crowd density percentage to a human-readable severity label.
+ *
+ * @param {number} percent - Density value in the range [0, 100]
+ * @returns {'Low'|'Moderate'|'High'|'Critical'} Severity label
  */
 export function densityLabel(percent) {
   if (percent < 40) return 'Low';
   if (percent < 70) return 'Moderate';
   if (percent < 85) return 'High';
   return 'Critical';
+}
+
+/**
+ * Convenience helper that returns both colour and label in one call,
+ * eliminating the repeated `densityColor(p)` + `densityLabel(p)` pattern
+ * found across crowd, navigation, and transport components.
+ *
+ * @param {number} percent - Density value in the range [0, 100]
+ * @returns {{ color: string, label: string }} Object with hex colour and label
+ *
+ * @example
+ * const { color, label } = getDensityInfo(zone.current);
+ * el.style.color = color;
+ * el.textContent = label;
+ */
+export function getDensityInfo(percent) {
+  return { color: densityColor(percent), label: densityLabel(percent) };
+}
+
+/**
+ * Formats an occupancy ratio as a human-readable string.
+ *
+ * @param {number} occupied - Current occupancy count
+ * @param {number} total    - Maximum capacity
+ * @returns {string} e.g. "64,300 / 82,500 (78%)"
+ *
+ * @example
+ * el.textContent = formatCapacity(currentOcc, TOTAL_CAPACITY);
+ */
+export function formatCapacity(occupied, total) {
+  const pct = Math.round((occupied / total) * 100);
+  return `${formatNumber(occupied)} / ${formatNumber(total)} (${pct}%)`;
 }
 
 /**
@@ -102,7 +151,22 @@ export function sanitizeHTML(str) {
 }
 
 /**
- * Parse markdown-like text to basic HTML
+ * Converts a lightweight Markdown-like subset to safe HTML.
+ *
+ * Supported syntax:
+ * - `**bold**`  → `<strong>bold</strong>`
+ * - `*italic*`  → `<em>italic</em>`
+ * - `` `code` `` → `<code>code</code>`
+ * - `# Heading` (1–3 levels) → `<h4>Heading</h4>`
+ * - `\n- item`  → `<li>item</li>` wrapped in `<ul>`
+ * - Bare newlines → `<br>`
+ *
+ * ⚠️ This function does NOT sanitize the input — always run the text
+ * through `sanitizeHTML()` before passing to this function if it
+ * originates from user input.
+ *
+ * @param {string} text - Markdown-like plain text
+ * @returns {string} HTML string ready for `innerHTML` assignment
  */
 export function parseMarkdown(text) {
   return text
@@ -183,7 +247,21 @@ export const storage = {
 };
 
 /**
- * Show a toast notification
+ * Displays a self-dismissing toast notification at the bottom-right of the screen.
+ *
+ * Creates a `#toast-container` div the first time it is called (if absent),
+ * then appends the toast and auto-removes it after `duration` ms.
+ *
+ * The function is idempotent with respect to the container — multiple calls
+ * stack toasts vertically rather than overwriting.
+ *
+ * @param {string} message  - Text to display (HTML-unsafe; sanitize before calling)
+ * @param {'info'|'success'|'warning'|'error'} [type='info'] - Visual variant
+ * @param {number} [duration=3000] - Time in milliseconds before auto-dismiss
+ *
+ * @example
+ * showToast('API key saved!', 'success');
+ * showToast('Gate 5 is at critical capacity', 'error', 6000);
  */
 export function showToast(message, type = 'info', duration = 3000) {
   const existing = document.getElementById('toast-container');
@@ -225,11 +303,27 @@ export function showToast(message, type = 'info', duration = 3000) {
 }
 
 /**
- * Animate number counting
+ * Animates a numeric counter from `start` to `end` over `duration` milliseconds
+ * using a cubic ease-out curve for a smooth deceleration effect.
+ *
+ * Uses `requestAnimationFrame` for frame-rate-synchronised updates and
+ * `performance.now()` for accurate elapsed-time tracking.
+ *
+ * The easing formula applied is: `eased = 1 - (1 - progress)³`
+ * which produces fast initial movement that slows near the target value.
+ *
+ * @param {HTMLElement} element  - DOM element whose `textContent` will be updated
+ * @param {number}      start    - Starting numeric value
+ * @param {number}      end      - Ending numeric value
+ * @param {number}      [duration=1000] - Animation duration in milliseconds
+ *
+ * @example
+ * // Animate the fan count KPI from 0 to 64,300 over 1.5 seconds
+ * animateCount(document.getElementById('kpi-fans'), 0, 64300, 1500);
  */
 export function animateCount(element, start, end, duration = 1000) {
   const startTime = performance.now();
-  const update = (currentTime) => {
+  const update = currentTime => {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic

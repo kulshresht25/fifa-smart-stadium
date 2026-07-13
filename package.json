@@ -1,0 +1,33 @@
+{
+  "name": "stadiumiq",
+  "version": "1.0.0",
+  "description": "StadiumIQ — AI-powered FIFA World Cup 2026 Smart Stadium Operations Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write \"**/*.{js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{js,json,md}\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@vitest/coverage-v8": "^2.1.0",
+    "@vitest/ui": "^2.1.0",
+    "eslint": "^9.11.0",
+    "eslint-plugin-import": "^2.30.0",
+    "globals": "^15.9.0",
+    "jsdom": "^25.0.0",
+    "prettier": "^3.3.3",
+    "vite": "^5.4.0",
+    "vitest": "^2.1.0"
+  }
+}
