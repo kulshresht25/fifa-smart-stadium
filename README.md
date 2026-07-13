@@ -64,12 +64,17 @@ All core functionality is bundled into a single zero-dependency file (`index.htm
 
 ```
 Smart Stadiums & Tournament Operations/
-├── index.html                   # Self-contained SPA (contains HTML, inline CSS, and JS)
+├── index.html                   # Self-contained SPA (contains HTML, inline CSS, and JS) — this is what's deployed
+├── components/                  # Standalone modular reference implementation (see note below) — NOT loaded by index.html
+├── utils/                       # Standalone modular reference implementation (see note below) — NOT loaded by index.html
+├── styles/                      # Standalone CSS reference — NOT loaded by index.html
 ├── firebase.json                # Firebase Hosting configurations
 ├── .firebaserc                  # Firebase project aliases config
 ├── README.md                    # This documentation file
 └── .gitignore                   # Git exclude rules
 ```
+
+> **Note on `components/` and `utils/`:** these folders contain a modular rewrite of the same functionality that lives inline in `index.html`, kept as a reference for a future move away from the single-file architecture. They are **not** imported or executed by the deployed app — `index.html` is fully self-contained and is the only code that actually runs. If you're reviewing this repo, treat `index.html` as the source of truth.
 
 ---
 
@@ -99,4 +104,4 @@ python -m http.server 8000
 1. Get a free API key at **[aistudio.google.com](https://aistudio.google.com/app/apikey)** (accepts keys starting with `AIzaSy` or `AQ.`).
 2. Click **⚙️ Settings & API Key** in the sidebar.
 3. Paste the key and click **Save Settings**.
-4. The key is securely stored in your **browser's localStorage** and never sent to any external server other than Google's Gemini API endpoints.
+4. The key is stored in your **browser's sessionStorage** (cleared automatically when you close the tab) and never sent to any external server other than Google's Gemini API endpoints.
